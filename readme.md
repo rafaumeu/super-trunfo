@@ -82,9 +82,20 @@ super-trunfo/
 
 ### 🏃 Nível Aventureiro
 
-- Cálculo de densidade populacional
-- Cálculo de PIB per capita
+- Cálculo de densidade populacional (habitantes/km²)
+  - Utiliza população e área para cálculo
+  - Formatação com 2 casas decimais
+  - Exibição em notação científica para valores grandes
+
+- Cálculo de PIB per capita (PIB/população)
+  - Divisão do PIB pela população total
+  - Formatação monetária adequada
+  - Classificação por faixas de desenvolvimento
+
 - Análise avançada de dados
+  - Comparação entre cartas
+  - Ranking por indicadores econômicos
+  - Visualização em formato tabular
 
 ### 👑 Nível Mestre
 
