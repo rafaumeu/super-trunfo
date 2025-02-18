@@ -1,0 +1,70 @@
+name: Release & Version
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
+
+      - name: Determine version bump
+        id: bump
+        run: |
+          commits=$(git log ${{ env.LATEST_TAG }}..HEAD --pretty=format:"%s")
+          bump_type="patch"
+
+          while IFS= read -r commit; do
+            if [[ $commit == feat:* ]]; then
+              bump_type="minor"
+            elif [[ $commit == BREAKING* ]] || [[ $commit == !:* ]]; then
+              bump_type="major"
+              break
+            fi
+          done <<< "$commits"
+
+          echo "BUMP=$bump_type" >> $GITHUB_ENV
+
+      - name: Bump version
+        id: version
+        run: |
+          IFS='.' read -r major minor patch < <(echo "${LATEST_TAG#v}" | tr -d 'v')
+
+          case ${{ env.BUMP }} in
+            major)
+              new_version="$((major + 1)).0.0"
+              ;;
+            minor)
+              new_version="${major}.$((minor + 1)).0"
+              ;;
+            patch)
+              new_version="${major}.${minor}.$((patch + 1))"
+              ;;
+          esac
+
+          echo "NEW_VERSION=v$new_version" >> $GITHUB_ENV
+
+      - name: Create Release
+        run: |
+          changelog=$(git log ${{ env.LATEST_TAG }}..HEAD --pretty=format:"- %s%n")
+
+          gh release create ${{ env.NEW_VERSION }} \
+            --title "${{ env.NEW_VERSION }}" \
+            --notes "$changelog" \
+            --target main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
