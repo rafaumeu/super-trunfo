@@ -1,0 +1,17 @@
+# Configuração do labeler
+exercicio:
+  - "exercicios/**/*"
+
+conceitos:
+  - "conceitos/**/*"
+
+documentacao:
+  - "**/*.md"
+  - "docs/**/*"
+
+workflow:
+  - ".github/**/*"
+
+build:
+  - "**/Makefile"
+  - "**/*.c"
