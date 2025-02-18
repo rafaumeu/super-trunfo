@@ -1,9 +1,12 @@
 # Configuração do labeler
-exercicio:
-  - "exercicios/**/*"
+novato:
+  - "novato.c"
 
-conceitos:
-  - "conceitos/**/*"
+aventureiro:
+  - "aventureiro.c"
+
+mestre:
+  - "mestre.c"
 
 documentacao:
   - "**/*.md"
@@ -15,3 +18,4 @@ workflow:
 build:
   - "**/Makefile"
   - "**/*.c"
+  - "*.c"
