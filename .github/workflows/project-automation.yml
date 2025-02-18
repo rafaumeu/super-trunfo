@@ -12,17 +12,18 @@ jobs:
       issues: write
       pull-requests: write
       repository-projects: write
+      projects: write
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
           project-url: https://github.com/users/rafaumeu/projects/5
-          github-token: ${{ secrets.ACTIONS_TOKEN }}
+          github-token: ${{ secrets.GH_PROJECT_TOKEN }}
 
       - name: Move Issue
         if: github.event_name == 'issues'
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.ACTIONS_TOKEN }}
+          github-token: ${{ secrets.GH_PROJECT_TOKEN }}
           script: |
             const status = context.payload.action === 'closed'
               ? 'Done'
