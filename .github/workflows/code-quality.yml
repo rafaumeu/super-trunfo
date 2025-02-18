@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.ACTIONS_TOKEN }}
-          fetch-depth: 0
 
       - name: Install clang-format
         run: sudo apt-get install -y clang-format
@@ -21,7 +18,4 @@ jobs:
       - name: Check formatting
         run: |
           find . -name '*.c' -o -name '*.h' | xargs clang-format -i --style=file
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add -u
-          git diff --cached --exit-code || (git commit -m "style: format code with clang-format" && git push)
+          git diff --exit-code

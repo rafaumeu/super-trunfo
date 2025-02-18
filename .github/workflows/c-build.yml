@@ -19,7 +19,7 @@ jobs:
 
       - name: Compile
         run: |
-          gcc -Wall -Wextra -o novato novato.c -lm
+          gcc -Wall -Wextra -o supertrunfo supertrunfo.c -lm
 
       - name: Static Analysis
         run: |
@@ -27,4 +27,4 @@ jobs:
 
       - name: Memory Check
         run: |
-          valgrind --leak-check=full ./novato
+          valgrind --leak-check=full ./supertrunfo
