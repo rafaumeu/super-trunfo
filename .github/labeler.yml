@@ -1,12 +1,15 @@
 # Configuração do labeler
 novato:
-  - "novato.c"
+  - novato.c
+  - "**/novato.c"
 
 aventureiro:
-  - "aventureiro.c"
+  - aventureiro.c
+  - "**/aventureiro.c"
 
 mestre:
-  - "mestre.c"
+  - mestre.c
+  - "**/mestre.c"
 
 documentacao:
   - "**/*.md"
