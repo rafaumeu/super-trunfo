@@ -49,7 +49,7 @@ jobs:
                 ) { projectV2Item { id } }
               }
             `, {
-              projectId: "PVT_kwHOAdW7184AxuCE",
+              projectId: "PVT_kwHOAdW7184Ayg4u",
               itemId: context.payload.issue.node_id,
               fieldId: "PVTSSF_lAHOAdW7184AxuCEzgnyZJw",
               optionId: statusIds[status]
