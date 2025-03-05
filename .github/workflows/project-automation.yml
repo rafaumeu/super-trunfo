@@ -17,13 +17,13 @@ jobs:
       - uses: actions/add-to-project@v0.5.0
         with:
           project-url: https://github.com/users/rafaumeu/projects/5
-          github-token: ${{ secrets.GH_PROJECT_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Move Issue
         if: github.event_name == 'issues'
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GH_PROJECT_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const status = context.payload.action === 'closed'
               ? 'Done'
@@ -49,7 +49,7 @@ jobs:
                 ) { projectV2Item { id } }
               }
             `, {
-              projectId: "PVT_kwHOAdW7184AxuCE",
+              projectId: "PVT_kwHOAdW7184Ayg4u",
               itemId: context.payload.issue.node_id,
               fieldId: "PVTSSF_lAHOAdW7184AxuCEzgnyZJw",
               optionId: statusIds[status]
