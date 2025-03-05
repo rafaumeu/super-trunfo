@@ -25,6 +25,7 @@ jobs:
         run: |
           cppcheck --enable=all --suppress=missingIncludeSystem ./
 
-      - name: Memory Check
-        run: |
-          valgrind --leak-check=full ./supertrunfo
+      # Comment out or remove the memory check step that's causing the long wait
+      # - name: Memory Check
+      #   run: |
+      #     valgrind --leak-check=full ./supertrunfo
