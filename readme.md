@@ -1,8 +1,8 @@
-# 🎮 Super Trunfo - Países
+# 🎮 Super Trunfo - Countries
 
 <div align="center">
 
-Um jogo de cartas estilo Super Trunfo implementado em C, focado em comparação de características entre países.
+A Super Trunfo style card game implemented in C, focused on comparing characteristics between countries.
 
 [![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,104 +10,123 @@ Um jogo de cartas estilo Super Trunfo implementado em C, focado em comparação 
 
 ---
 
-## 📖 Índice
+## 📖 Index
 
-| [Funcionalidades](#-funcionalidades) | [Requisitos](#-requisitos) | [Como Executar](#-como-executar) |
+| [Features](#-features) | [Requirements](#-requirements) | [How to Run](#-how-to-run) |
 |-------------------------------------|---------------------------|----------------------------------|
-| [Estrutura](#-estrutura) | [Níveis do Jogo](#-níveis-do-jogo) | [Contribuindo](#-contribuindo) |
+| [Structure](#-structure) | [Game Levels](#-game-levels) | [Contributing](#-contributing) |
 
 ---
 </div>
 
-## 🎯 Funcionalidades
+## 🎯 Features
 
-### Sistema de Cartas
+### Card System
 
-- Cadastro de cartas com propriedades únicas
-- 8 estados (A-H) com 4 cidades cada
-- Códigos únicos para cada carta (ex: A01, B02)
-- Sistema de comparação de propriedades
+- Registration of cards with unique properties
+- 8 states (A-H) with 4 cities each
+- Unique codes for each card (e.g., A01, B02)
+- Property comparison system
+- Automatic calculation of indicators (population density and GDP per capita)
+- Classification of economic development and population density
+- Support for city names with multiple words (e.g., "São Paulo", "Rio de Janeiro")
 
-### Propriedades das Cartas
+### Card Properties
 
-- População
-- Área
-- PIB
-- Pontos Turísticos
+- Population
+- Area
+- GDP
+- Tourist Attractions
+- Population Density (calculated)
+- GDP per Capita (calculated)
+- City Name (supports full names with spaces)
+- State Code
 
-## 💻 Requisitos
+### Features
 
-- Compilador GCC
-- Sistema operacional Windows, Linux ou macOS
-- Conhecimentos básicos de terminal/linha de comando
+### Card System
 
-## 🚀 Como Executar
+- Registration of cards with unique properties
+- 8 states (A-H) with 4 cities each
+- Unique codes for each card (e.g., A01, B02)
+- Property comparison system
+- Automatic calculation of indicators (population density and GDP per capita)
+- Classification of economic development and population density
+- Support for city names with multiple words (e.g., "São Paulo", "Rio de Janeiro")
 
-1. Clone o repositório:
+## 💻 Requirements
+
+- GCC Compiler
+- Operating system: Windows, Linux, or macOS
+- Basic knowledge of terminal/command line
+
+## 🚀 How to Run
+
+1. Clone the repository:
 
 ```bash
 git clone <https://github.com/rafaumeu/super-trunfo.git>
 cd super-trunfo
 ```
 
-2. Compile o programa:
+2. Compile the program:
 
 ```bash
-gcc novato.c -o novato
+gcc supertrunfo.c -o supertrunfo
 ```
 
-3. Execute o programa:
+3. Execute the program:
 
 ```bash
-./novato
+./supertrunfo
 ```
 
-## 📁 Estrutura
+## 📁 Structure
 
 ```
 super-trunfo/
-├── novato.c          # Implementação nível novato
-├── aventureiro.c     # Implementação nível aventureiro
-├── mestre.c          # Implementação nível mestre
-└── README.md         # Documentação
+├── supertrunfo.c     # source code
+└── README.md         # Documentation
 ```
 
-## 🎮 Níveis do Jogo
+## 🎮 Game Levels
 
-### 🌟 Nível Novato
+### 🌟 Novice Level
 
-- Cadastro básico de cartas
-- Visualização de dados
-- Sistema de códigos único
+- Basic card registration
+- Data visualization
+- Unique code system
 
-### 🏃 Nível Aventureiro
+### 🏃 Adventurer Level (Implemented)
 
-- Cálculo de densidade populacional
-- Cálculo de PIB per capita
-- Análise avançada de dados
+- Population density calculation
+- GDP per capita calculation
+- Advanced data analysis
+- Decision structures for card classification
+- Enhanced visual formatting
 
-### 👑 Nível Mestre
+### 👑 Master Level (Implemented)
 
-- Sistema de comparação entre cartas
-- Cálculo de "Super Poder"
-- Lógica avançada de jogo
+- Card comparison system (implemented with PIB per capita comparison)
+- "Super Power" calculation
+- Advanced game logic
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-1. Faça um Fork do projeto
-2. Crie sua Feature Branch (`git checkout -b feature/NovaFuncionalidade`)
-3. Commit suas mudanças (`git commit -m 'feat: Adiciona nova funcionalidade'`)
-4. Push para a Branch (`git push origin feature/NovaFuncionalidade`)
-5. Abra um Pull Request
+1. Fork the project
+2. Create your Feature Branch (`git checkout -b feature/NewFeature`)
+3. Commit your changes (`git commit -m 'feat: Add new feature'`)
+4. Push to the Branch (`git push origin feature/NewFeature`)
+5. Open a Pull Request
 
-## 📝 Licença
+## 📝 License
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+This project is under the MIT license. See the [LICENSE](LICENSE) file for more details.
 
 ---
 
 <div align="center">
-Desenvolvido como parte do curso da MateCheck
+Developed as part of the MateCheck course
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rafaumeu)
 </div>
