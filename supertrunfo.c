@@ -50,7 +50,8 @@ void entradaDados(Carta *carta, int numeroCarta)
     printf("└─────────────────────────────────┘\n");
     printf("┌─────────────────────────────────┐\n");
     printf("│ Digite a cidade:              ");
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
     fgets(carta->cidade, 50, stdin);
     carta->cidade[strcspn(carta->cidade, "\n")] = 0;
     printf("│ Cidade: %s                      \n", carta->cidade);
@@ -91,24 +92,33 @@ void mostrarCarta(Carta *carta, int numeroCarta)
     printf("│ População: %d                   \n", carta->populacao);
     printf("│ Área: %.2f                      \n", carta->area);
     printf("│ PIB: %.2f                       \n", carta->pib);
-    printf("│ Densidade Populacional: %.2f    \n", carta->densidadePopulacional);
+    printf("│ Densidade Populacional: %.2f    \n",
+           carta->densidadePopulacional);
     printf("│ PIB Per Capita: %.2f            \n", carta->pibPerCapita);
     printf("│ Pontos Turísticos: %d           \n", carta->pontosTuristicos);
     printf("└─────────────────────────────────┘\n");
 }
-void compararCartas() {
+void compararCartas()
+{
     printf("\n┌─────────────────────────────────┐\n");
     printf("│ COMPARAÇÃO DE CARTAS            \n");
     printf("│ Atributo: PIB per capita        \n");
     printf("│                                 \n");
-    printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado, carta1.pibPerCapita);
-    printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado, carta2.pibPerCapita);
+    printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado,
+           carta1.pibPerCapita);
+    printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado,
+           carta2.pibPerCapita);
     printf("│                                 \n");
-    if(carta1.pibPerCapita > carta2.pibPerCapita) {
+    if (carta1.pibPerCapita > carta2.pibPerCapita)
+    {
         printf("│ Carta 1 é a melhor!            \n");
-    } else if(carta1.pibPerCapita < carta2.pibPerCapita) {
+    }
+    else if (carta1.pibPerCapita < carta2.pibPerCapita)
+    {
         printf("│ Carta 2 é a melhor!            \n");
-    } else {
+    }
+    else
+    {
         printf("│ Empate!                        \n");
     }
     printf("└─────────────────────────────────┘\n");
