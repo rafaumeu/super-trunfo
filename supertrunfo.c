@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-typedef struct{
+typedef struct
+{
     char codigo[4];
     char estado[3];
     char cidade[50];
@@ -12,17 +13,24 @@ typedef struct{
     float pibPerCapita;
 } Carta;
 Carta carta1, carta2;
-void calcularIndicadores(Carta *carta) {
+void calcularIndicadores(Carta *carta)
+{
     carta->densidadePopulacional = carta->populacao / carta->area;
     carta->pibPerCapita = carta->pib / carta->populacao;
-    if(carta->densidadePopulacional > 1000) {
+    if (carta->densidadePopulacional > 1000)
+    {
         printf("\nAlta densidade populacional!");
     }
-    if(carta->pibPerCapita > 50000) {
+    if (carta->pibPerCapita > 50000)
+    {
         printf("\nCidade com alto desenvolvimento econômico!");
-    } else if (carta->pibPerCapita > 25000) {
+    }
+    else if (carta->pibPerCapita > 25000)
+    {
         printf("\nCidade com médio desenvolvimento econômico!");
-    } else {
+    }
+    else
+    {
         printf("\nCidade em desenvolvimento econômico!");
     }
 }
