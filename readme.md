@@ -2,7 +2,7 @@
 
 <div align="center">
 
-A Super Trunfo (Top Trumps) style card game implemented in C, focused on comparing country characteristics.
+A Super Trunfo style card game implemented in C, focused on comparing characteristics between countries.
 
 [![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,10 +10,10 @@ A Super Trunfo (Top Trumps) style card game implemented in C, focused on compari
 
 ---
 
-## 📖 Table of Contents
+## 📖 Index
 
 | [Features](#-features) | [Requirements](#-requirements) | [How to Run](#-how-to-run) |
-|---------------------|--------------------------|------------------------|
+|-------------------------------------|---------------------------|----------------------------------|
 | [Structure](#-structure) | [Game Levels](#-game-levels) | [Contributing](#-contributing) |
 
 ---
@@ -23,10 +23,13 @@ A Super Trunfo (Top Trumps) style card game implemented in C, focused on compari
 
 ### Card System
 
-- Unique property card registration
+- Registration of cards with unique properties
 - 8 states (A-H) with 4 cities each
-- Unique code system (e.g., A01, B02)
+- Unique codes for each card (e.g., A01, B02)
 - Property comparison system
+- Automatic calculation of indicators (population density and GDP per capita)
+- Classification of economic development and population density
+- Support for city names with multiple words (e.g., "São Paulo", "Rio de Janeiro")
 
 ### Card Properties
 
@@ -34,12 +37,28 @@ A Super Trunfo (Top Trumps) style card game implemented in C, focused on compari
 - Area
 - GDP
 - Tourist Attractions
+- Population Density (calculated)
+- GDP per Capita (calculated)
+- City Name (supports full names with spaces)
+- State Code
+
+### Features
+
+### Card System
+
+- Registration of cards with unique properties
+- 8 states (A-H) with 4 cities each
+- Unique codes for each card (e.g., A01, B02)
+- Property comparison system
+- Automatic calculation of indicators (population density and GDP per capita)
+- Classification of economic development and population density
+- Support for city names with multiple words (e.g., "São Paulo", "Rio de Janeiro")
 
 ## 💻 Requirements
 
 - GCC Compiler
-- Windows, Linux, or macOS operating system
-- Basic terminal/command line knowledge
+- Operating system: Windows, Linux, or macOS
+- Basic knowledge of terminal/command line
 
 ## 🚀 How to Run
 
@@ -56,7 +75,7 @@ cd super-trunfo
 gcc supertrunfo.c -o supertrunfo
 ```
 
-3. Run the program:
+3. Execute the program:
 
 ```bash
 ./supertrunfo
@@ -66,14 +85,8 @@ gcc supertrunfo.c -o supertrunfo
 
 ```
 super-trunfo/
-├── src/
-│   └── supertrunfo.c    # Main game implementation
-├── .github/
-│   └── workflows/
-│       └── project-automation.yml
-├── .vscode/
-│   └── tasks.json
-└── README.md            # Documentation
+├── supertrunfo.c     # source code
+└── README.md         # Documentation
 ```
 
 ## 🎮 Game Levels
@@ -84,26 +97,17 @@ super-trunfo/
 - Data visualization
 - Unique code system
 
-### 🏃 Adventurer Level
+### 🏃 Adventurer Level (Implemented)
 
-- Population density calculation (inhabitants/km²)
-  - Uses population and area for calculation
-  - 2 decimal places formatting
-  - Scientific notation for large values
-
-- GDP per capita calculation (GDP/population)
-  - GDP divided by total population
-  - Proper monetary formatting
-  - Development level classification
-
+- Population density calculation
+- GDP per capita calculation
 - Advanced data analysis
-  - Card comparison
-  - Economic indicator ranking
-  - Tabular visualization
+- Decision structures for card classification
+- Enhanced visual formatting
 
-### 👑 Master Level
+### 👑 Master Level (Implemented)
 
-- Card comparison system
+- Card comparison system (implemented with PIB per capita comparison)
 - "Super Power" calculation
 - Advanced game logic
 
@@ -122,11 +126,7 @@ This project is under the MIT license. See the [LICENSE](LICENSE) file for more 
 ---
 
 <div align="center">
-Made with ❤️ by Rafael Dias Zendron
-</div>
-<div align="center">
-<img src="https://github.com/rafaumeu.png" width="100" height="100" style="border-radius: 50%;">
+Developed as part of the MateCheck course
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rafael-dias-zendron-528290132/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rafaumeu)
 </div>
