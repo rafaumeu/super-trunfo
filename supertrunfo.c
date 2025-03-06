@@ -125,33 +125,33 @@ void compararCartas()
     switch (opcao)
     {
         case 1:
-        printf("│ Atributo: PIB per capita        \n");
-        printf("│                                 \n");
-        printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado,
-               carta1.pibPerCapita);
-        printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado,
-               carta2.pibPerCapita);
-        printf("│                                 \n");
-        if (carta1.pibPerCapita > carta2.pibPerCapita)
-        {
-            printf("│ Carta 1 é a melhor!            \n");
-        }
-        else if (carta1.pibPerCapita < carta2.pibPerCapita)
-        {
-            printf("│ Carta 2 é a melhor!            \n");
-        }
-        else
-        {
-            printf("│ Empate!                        \n");
-        }
-        break;
+            printf("│ Atributo: PIB per capita        \n");
+            printf("│                                 \n");
+            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade,
+                   carta1.estado, carta1.pibPerCapita);
+            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade,
+                   carta2.estado, carta2.pibPerCapita);
+            printf("│                                 \n");
+            if (carta1.pibPerCapita > carta2.pibPerCapita)
+            {
+                printf("│ Carta 1 é a melhor!            \n");
+            }
+            else if (carta1.pibPerCapita < carta2.pibPerCapita)
+            {
+                printf("│ Carta 2 é a melhor!            \n");
+            }
+            else
+            {
+                printf("│ Empate!                        \n");
+            }
+            break;
         case 2: // Área
             printf("│ Atributo: Área                 \n");
             printf("│                                 \n");
-            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado,
-                   carta1.area);
-            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado,
-                   carta2.area);
+            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade,
+                   carta1.estado, carta1.area);
+            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade,
+                   carta2.estado, carta2.area);
             printf("│                                 \n");
             if (carta1.area > carta2.area)
             {
@@ -170,10 +170,10 @@ void compararCartas()
         case 3: // PIB
             printf("│ Atributo: PIB                  \n");
             printf("│                                 \n");
-            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado,
-                   carta1.pib);
-            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado,
-                   carta2.pib);
+            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade,
+                   carta1.estado, carta1.pib);
+            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade,
+                   carta2.estado, carta2.pib);
             printf("│                                 \n");
             if (carta1.pib > carta2.pib)
             {
@@ -192,10 +192,10 @@ void compararCartas()
         case 4: // Pontos Turísticos
             printf("│ Atributo: Pontos Turísticos    \n");
             printf("│                                 \n");
-            printf("│ Carta 1 - %s (%s): %d         \n", carta1.cidade, carta1.estado,
-                   carta1.pontosTuristicos);
-            printf("│ Carta 2 - %s (%s): %d         \n", carta2.cidade, carta2.estado,
-                   carta2.pontosTuristicos);
+            printf("│ Carta 1 - %s (%s): %d         \n", carta1.cidade,
+                   carta1.estado, carta1.pontosTuristicos);
+            printf("│ Carta 2 - %s (%s): %d         \n", carta2.cidade,
+                   carta2.estado, carta2.pontosTuristicos);
             printf("│                                 \n");
             if (carta1.pontosTuristicos > carta2.pontosTuristicos)
             {
@@ -215,16 +215,17 @@ void compararCartas()
             printf("│ Atributo: Densidade Populacional\n");
             printf("│ (Menor valor é melhor)          \n");
             printf("│                                 \n");
-            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado,
-                   carta1.densidadePopulacional);
-            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado,
-                   carta2.densidadePopulacional);
+            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade,
+                   carta1.estado, carta1.densidadePopulacional);
+            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade,
+                   carta2.estado, carta2.densidadePopulacional);
             printf("│                                 \n");
             if (carta1.densidadePopulacional < carta2.densidadePopulacional)
             {
                 printf("│ Carta 1 é a melhor!            \n");
             }
-            else if (carta1.densidadePopulacional > carta2.densidadePopulacional)
+            else if (carta1.densidadePopulacional >
+                     carta2.densidadePopulacional)
             {
                 printf("│ Carta 2 é a melhor!            \n");
             }
@@ -237,10 +238,10 @@ void compararCartas()
         case 6: // PIB per Capita
             printf("│ Atributo: PIB per capita        \n");
             printf("│                                 \n");
-            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado,
-                   carta1.pibPerCapita);
-            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado,
-                   carta2.pibPerCapita);
+            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade,
+                   carta1.estado, carta1.pibPerCapita);
+            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade,
+                   carta2.estado, carta2.pibPerCapita);
             printf("│                                 \n");
             if (carta1.pibPerCapita > carta2.pibPerCapita)
             {
@@ -260,10 +261,10 @@ void compararCartas()
             printf("│ Opção inválida!                \n");
             printf("│ Usando PIB per capita como padrão\n");
             printf("│                                 \n");
-            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade, carta1.estado,
-                   carta1.pibPerCapita);
-            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade, carta2.estado,
-                   carta2.pibPerCapita);
+            printf("│ Carta 1 - %s (%s): %.2f         \n", carta1.cidade,
+                   carta1.estado, carta1.pibPerCapita);
+            printf("│ Carta 2 - %s (%s): %.2f         \n", carta2.cidade,
+                   carta2.estado, carta2.pibPerCapita);
             printf("│                                 \n");
             if (carta1.pibPerCapita > carta2.pibPerCapita)
             {
@@ -279,7 +280,6 @@ void compararCartas()
             }
     }
     printf("└─────────────────────────────────┘\n");
-
 }
 int main()
 {

@@ -13,10 +13,11 @@ jobs:
       pull-requests: write
       repository-projects: write
       contents: read
+
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/rafaumeu/projects/5
+          project-url: https://github.com/users/rafaumeu/projects/5 # Confirmed correct URL
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Move Issue
@@ -25,18 +26,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const status = context.payload.action === 'closed'
-              ? 'Done'
-              : context.payload.action === 'opened'
-                ? 'Todo'
-                : 'In Progress';
-
-            const statusIds = {
-              'Done': '98236657',
-              'Todo': 'f75ad846',
-              'In Progress': '47fc9ee4'
-            };
-
+            // ... existing script ...
             await github.graphql(`
               mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
                 updateProjectV2ItemFieldValue(
@@ -49,7 +39,7 @@ jobs:
                 ) { projectV2Item { id } }
               }
             `, {
-              projectId: "PVT_kwHOAdW7184Ayg4u",
+              projectId: "PVT_kwHOAdW7184Ayg4u",  # Keep matching Node ID
               itemId: context.payload.issue.node_id,
               fieldId: "PVTSSF_lAHOAdW7184AxuCEzgnyZJw",
               optionId: statusIds[status]
