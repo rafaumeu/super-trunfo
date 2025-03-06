@@ -93,17 +93,19 @@ super-trunfo/
 
 ### 🌟 Novice Level
 
-- Basic card registration
-- Data visualization
-- Unique code system
-
-### 🏃 Adventurer Level (Implemented)
-
 - Population density calculation
 - GDP per capita calculation
 - Advanced data analysis
 - Decision structures for card classification
 - Enhanced visual formatting
+
+### 🏃 Adventurer Level (Implemented)
+
+- Interactive attribute selection menu
+- Multiple comparison modes (6 attributes)
+- Inverse comparison rules for density
+- Input validation system
+- Advanced result display formatting
 
 ### 👑 Master Level (Implemented)
 

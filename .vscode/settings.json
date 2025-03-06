@@ -1,8 +1,9 @@
 {
     "[c]": {
-        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.defaultFormatter": "ms-vscode.cpptools",  // Use official C/C++ extension
         "editor.formatOnSave": true,
-        "editor.tabSize": 4
+        "C_Cpp.formatting": "clangFormat",  // Explicitly enable clang-format
+        "C_Cpp.clang_format_path": "C:/Program Files/LLVM/bin/clang-format.exe"  // Full path to executable
     },
     "files.associations": {
         "*.h": "c",
