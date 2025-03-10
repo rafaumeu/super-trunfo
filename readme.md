@@ -14,7 +14,7 @@ A Super Trunfo style card game implemented in C, focused on comparing characteri
 
 | [Features](#-features) | [Requirements](#-requirements) | [How to Run](#-how-to-run) |
 |-------------------------------------|---------------------------|----------------------------------|
-| [Structure](#-structure) | [Game Levels](#-game-levels) | [Contributing](#-contributing) |
+| [Structure](#-structure) | [Game Levels](#-game-levels) | [Game Modes](#-game-modes) | [Contributing](#-contributing) |
 
 ---
 </div>
@@ -30,6 +30,7 @@ A Super Trunfo style card game implemented in C, focused on comparing characteri
 - Automatic calculation of indicators (population density and GDP per capita)
 - Classification of economic development and population density
 - Support for city names with multiple words (e.g., "São Paulo", "Rio de Janeiro")
+- Advanced comparison with multiple attributes
 
 ### Card Properties
 
@@ -41,18 +42,6 @@ A Super Trunfo style card game implemented in C, focused on comparing characteri
 - GDP per Capita (calculated)
 - City Name (supports full names with spaces)
 - State Code
-
-### Features
-
-### Card System
-
-- Registration of cards with unique properties
-- 8 states (A-H) with 4 cities each
-- Unique codes for each card (e.g., A01, B02)
-- Property comparison system
-- Automatic calculation of indicators (population density and GDP per capita)
-- Classification of economic development and population density
-- Support for city names with multiple words (e.g., "São Paulo", "Rio de Janeiro")
 
 ## 💻 Requirements
 
@@ -112,6 +101,23 @@ super-trunfo/
 - Card comparison system (implemented with PIB per capita comparison)
 - "Super Power" calculation
 - Advanced game logic
+- Multi-attribute comparison system
+- Dynamic attribute selection menus
+- Weighted comparison algorithms
+- Special handling for attributes where lower values are better
+
+## 🎲 Game Modes
+
+### Single Attribute Comparison
+
+Compare cards based on a single selected attribute like Population, Area, GDP, etc.
+
+### Advanced Multi-Attribute Comparison
+
+- Select two different attributes to compare cards
+- System calculates a weighted sum of the attributes
+- Special handling for attributes like Population Density where lower values are better
+- Detailed results display showing individual attribute values and final scores
 
 ## 🤝 Contributing
 
