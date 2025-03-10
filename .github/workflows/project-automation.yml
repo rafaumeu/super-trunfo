@@ -17,7 +17,10 @@ jobs:
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/rafaumeu/projects/5 # Confirmed correct URL
+          # Update this line to use the project number instead of URL
+          project-number: 5
+          # Specify the organization or user
+          organization: rafaumeu
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Move Issue
@@ -39,7 +42,7 @@ jobs:
                 ) { projectV2Item { id } }
               }
             `, {
-              projectId: "PVT_kwHOAdW7184Ayg4u",  # Keep matching Node ID
+              projectId: "PVT_kwHOAdW7184Ayg4u",
               itemId: context.payload.issue.node_id,
               fieldId: "PVTSSF_lAHOAdW7184AxuCEzgnyZJw",
               optionId: statusIds[status]
