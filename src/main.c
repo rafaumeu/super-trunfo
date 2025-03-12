@@ -7,6 +7,7 @@
 #include "../include/interface.h"
 #include "../include/jogo.h"
 #include "../include/persistencia.h"
+#include "../include/ranking.h"
 #include "../include/testes.h"
 #include <stdio.h>
 
@@ -27,7 +28,7 @@ int main(int argc, char *argv[])
     do
     {
         exibirMenu();
-        opcao = lerOpcao(0, 7); // 0 para sair, 1-7 para opções do jogo
+        opcao = lerOpcao(0, 8); // 0 para sair, 1-8 para opções do jogo
 
         switch (opcao)
         {
@@ -80,10 +81,18 @@ int main(int argc, char *argv[])
             }
             break;
         case 6:
+            // Exibir ranking
+            {
+                CriterioRanking criterio = selecionarCriterioRanking();
+                exibirRanking(criterio);
+                pausar();
+            }
+            break;
+        case 7:
             // Executar testes
             executarTestes();
             break;
-        case 7:
+        case 8:
             // Ajuda/Instruções
             desenharCabecalho("Ajuda");
             printf("Este é o Super Trunfo de Cidades!\n\n");
@@ -92,7 +101,8 @@ int main(int argc, char *argv[])
             printf("3. Compare duas cartas pelos atributos\n");
             printf("4. Liste todas as cartas salvas\n");
             printf("5. Carregue a última carta salva\n");
-            printf("6. Execute os testes do sistema\n");
+            printf("6. Veja o ranking das cartas\n");
+            printf("7. Execute os testes do sistema\n");
             desenharLinha();
             pausar();
             break;

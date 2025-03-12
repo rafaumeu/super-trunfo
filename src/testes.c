@@ -2,6 +2,7 @@
 #include "../include/interface.h"
 #include "../include/jogo.h"
 #include "../include/persistencia.h"
+#include "../include/ranking.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -95,6 +96,32 @@ void testarPersistencia(void)
     printf("Teste de listagem: OK\n");
 }
 
+void testarRanking(void)
+{
+    // Criar e salvar algumas cartas para teste
+    Carta carta1 = criarCartaTeste("R1", "SP", "São Paulo", 1000000, 1000.0f,
+                                   1000000.0f, 10);
+    Carta carta2 =
+        criarCartaTeste("R2", "RJ", "Rio", 500000, 500.0f, 500000.0f, 5);
+    Carta carta3 =
+        criarCartaTeste("R3", "MG", "BH", 250000, 250.0f, 250000.0f, 3);
+
+    assert(salvarCarta(&carta1) == 1);
+    assert(salvarCarta(&carta2) == 1);
+    assert(salvarCarta(&carta3) == 1);
+
+    // Testar ranking por diferentes critérios
+    assert(exibirRanking(RANKING_POPULACAO) > 0);
+    assert(exibirRanking(RANKING_AREA) > 0);
+    assert(exibirRanking(RANKING_PIB) > 0);
+    assert(exibirRanking(RANKING_PONTOS_TURISTICOS) > 0);
+    assert(exibirRanking(RANKING_DENSIDADE) > 0);
+    assert(exibirRanking(RANKING_PIB_PER_CAPITA) > 0);
+    assert(exibirRanking(RANKING_SUPER_PODER) > 0);
+
+    printf("Teste de ranking: OK\n");
+}
+
 // Função principal de testes
 void executarTestes(void)
 {
@@ -104,6 +131,7 @@ void executarTestes(void)
     testarComparacao();
     testarSuperPoder();
     testarPersistencia();
+    testarRanking();
 
     desenharLinha();
     printf("Todos os testes passaram!\n");
