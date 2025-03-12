@@ -1,4 +1,5 @@
 name: Project Board Automation
+
 on:
   issues:
     types: [opened, reopened, closed]
@@ -12,22 +13,91 @@ jobs:
       issues: write
       pull-requests: write
       repository-projects: write
-      contents: read
-
     steps:
-      - uses: actions/add-to-project@v0.5.0
+      # Adiciona a issue/pull request ao projeto
+      - name: Add Issue or PR to Project
+        uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/rafaumeu/projects/5 # Confirmed correct URL
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          project-url: https://github.com/users/rafaumeu/projects/5
+          github-token: ${{ secrets.GH_PAT }}
 
-      - name: Move Issue
-        if: github.event_name == 'issues'
+      # Movimenta a issue/pull request conforme o status
+      - name: Move Issue or PR
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_PAT }}
           script: |
-            // ... existing script ...
-            await github.graphql(`
+            const eventName = context.eventName;
+            console.log('Event Name:', eventName);
+            console.log('Payload:', JSON.stringify(context.payload, null, 2));
+
+            const status = context.payload.action === 'closed' 
+              ? 'Done'
+              : context.payload.action === 'opened' 
+                ? 'Todo'
+                : 'In Progress';
+
+            const statusIds = {
+              'Done': '98236657',
+              'Todo': 'f75ad846',
+              'In Progress': '47fc9ee4'
+            };
+
+            let contentId;
+            if (eventName === 'issues') {
+              contentId = context.payload.issue.node_id;
+              if (!contentId) throw new Error('Issue node_id is undefined.');
+            } else if (eventName === 'pull_request') {
+              contentId = context.payload.pull_request.node_id;
+              if (!contentId) throw new Error('Pull request node_id is undefined.');
+            } else {
+              throw new Error(`Unsupported event type: ${eventName}`);
+            }
+
+            // Aguarda 5 segundos para garantir que o item foi adicionado ao projeto
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
+            // Consulta para obter todos os itens do projeto
+            const query = `
+              query($projectId: ID!) {
+                node(id: $projectId) {
+                  ... on ProjectV2 {
+                    items(first: 100) {
+                      nodes {
+                        id
+                        content {
+                          ... on Issue {
+                            id
+                          }
+                          ... on PullRequest {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+
+            const projectResponse = await github.graphql(query, {
+              projectId: "PVT_kwHOAdW7184Ayg4u"
+            });
+
+            console.log('Project Items:', JSON.stringify(projectResponse.node.items.nodes, null, 2));
+
+            // Encontrar o item correspondente ao contentId
+            const item = projectResponse.node.items.nodes.find(node => 
+              node.content?.id === contentId
+            );
+            const itemId = item?.id;
+            if (!itemId) {
+              throw new Error(`Could not find ProjectV2Item for contentId: ${contentId}`);
+            }
+            console.log('ProjectV2Item ID:', itemId);
+
+            // Mutação para atualizar o status
+            const mutation = `
               mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
                 updateProjectV2ItemFieldValue(
                   input: {
@@ -38,9 +108,12 @@ jobs:
                   }
                 ) { projectV2Item { id } }
               }
-            `, {
-              projectId: "PVT_kwHOAdW7184Ayg4u",  # Keep matching Node ID
-              itemId: context.payload.issue.node_id,
-              fieldId: "PVTSSF_lAHOAdW7184AxuCEzgnyZJw",
+            `;
+
+            await github.graphql(mutation, {
+              projectId: "PVT_kwHOAdW7184Ayg4u",
+              itemId: itemId,
+              fieldId: "PVTSSF_lAHOAdW7184Ayg4uzgodCck",
               optionId: statusIds[status]
             });
+            console.log(`Updated item ${itemId} to status: ${status}`);
