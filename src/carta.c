@@ -190,16 +190,16 @@ float obterValorAtributo(const Carta *carta, int atributo)
 {
     switch (atributo)
     {
-    case 1:
-        return (float)carta->populacao;
-    case 2:
-        return carta->area;
-    case 3:
-        return carta->pib;
-    case 4:
-        return (float)carta->pontosTuristicos;
-    default:
-        return 0.0f;
+        case 1:
+            return (float)carta->populacao;
+        case 2:
+            return carta->area;
+        case 3:
+            return carta->pib;
+        case 4:
+            return (float)carta->pontosTuristicos;
+        default:
+            return 0.0f;
     }
 }
 
@@ -207,15 +207,15 @@ const char *obterNomeAtributo(int atributo)
 {
     switch (atributo)
     {
-    case 1:
-        return "População";
-    case 2:
-        return "Área";
-    case 3:
-        return "PIB";
-    case 4:
-        return "Pontos Turísticos";
-    default:
-        return "Desconhecido";
+        case 1:
+            return "População";
+        case 2:
+            return "Área";
+        case 3:
+            return "PIB";
+        case 4:
+            return "Pontos Turísticos";
+        default:
+            return "Desconhecido";
     }
 }

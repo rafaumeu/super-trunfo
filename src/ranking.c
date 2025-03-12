@@ -27,29 +27,29 @@ int exibirRanking(CriterioRanking criterio)
     MessageId msgId;
     switch (criterio)
     {
-    case CRITERIO_POPULACAO:
-        msgId = MSG_RANKING_POPULATION;
-        break;
-    case CRITERIO_AREA:
-        msgId = MSG_RANKING_AREA;
-        break;
-    case CRITERIO_PIB:
-        msgId = MSG_RANKING_GDP;
-        break;
-    case CRITERIO_PONTOS_TURISTICOS:
-        msgId = MSG_RANKING_TOURIST;
-        break;
-    case CRITERIO_DENSIDADE:
-        msgId = MSG_RANKING_DENSITY;
-        break;
-    case CRITERIO_PIB_PER_CAPITA:
-        msgId = MSG_RANKING_GDP_CAPITA;
-        break;
-    case CRITERIO_SUPER_PODER:
-        msgId = MSG_RANKING_POWER;
-        break;
-    default:
-        return 0;
+        case CRITERIO_POPULACAO:
+            msgId = MSG_RANKING_POPULATION;
+            break;
+        case CRITERIO_AREA:
+            msgId = MSG_RANKING_AREA;
+            break;
+        case CRITERIO_PIB:
+            msgId = MSG_RANKING_GDP;
+            break;
+        case CRITERIO_PONTOS_TURISTICOS:
+            msgId = MSG_RANKING_TOURIST;
+            break;
+        case CRITERIO_DENSIDADE:
+            msgId = MSG_RANKING_DENSITY;
+            break;
+        case CRITERIO_PIB_PER_CAPITA:
+            msgId = MSG_RANKING_GDP_CAPITA;
+            break;
+        case CRITERIO_SUPER_PODER:
+            msgId = MSG_RANKING_POWER;
+            break;
+        default:
+            return 0;
     }
 
     limparTela();
@@ -64,35 +64,36 @@ int exibirRanking(CriterioRanking criterio)
 
             switch (criterio)
             {
-            case CRITERIO_POPULACAO:
-                valor1 = cartas[j].populacao;
-                valor2 = cartas[j + 1].populacao;
-                break;
-            case CRITERIO_AREA:
-                valor1 = cartas[j].area;
-                valor2 = cartas[j + 1].area;
-                break;
-            case CRITERIO_PIB:
-                valor1 = cartas[j].pib;
-                valor2 = cartas[j + 1].pib;
-                break;
-            case CRITERIO_PONTOS_TURISTICOS:
-                valor1 = cartas[j].pontosTuristicos;
-                valor2 = cartas[j + 1].pontosTuristicos;
-                break;
-            case CRITERIO_DENSIDADE:
-                valor1 = cartas[j].populacao / cartas[j].area;
-                valor2 = cartas[j + 1].populacao / cartas[j + 1].area;
-                break;
-            case CRITERIO_PIB_PER_CAPITA:
-                valor1 = cartas[j].pib / cartas[j].populacao;
-                valor2 = cartas[j + 1].pib / cartas[j + 1].populacao;
-                break;
-            case CRITERIO_SUPER_PODER:
-                valor1 = (cartas[j].populacao * cartas[j].pib) / cartas[j].area;
-                valor2 = (cartas[j + 1].populacao * cartas[j + 1].pib) /
-                         cartas[j + 1].area;
-                break;
+                case CRITERIO_POPULACAO:
+                    valor1 = cartas[j].populacao;
+                    valor2 = cartas[j + 1].populacao;
+                    break;
+                case CRITERIO_AREA:
+                    valor1 = cartas[j].area;
+                    valor2 = cartas[j + 1].area;
+                    break;
+                case CRITERIO_PIB:
+                    valor1 = cartas[j].pib;
+                    valor2 = cartas[j + 1].pib;
+                    break;
+                case CRITERIO_PONTOS_TURISTICOS:
+                    valor1 = cartas[j].pontosTuristicos;
+                    valor2 = cartas[j + 1].pontosTuristicos;
+                    break;
+                case CRITERIO_DENSIDADE:
+                    valor1 = cartas[j].populacao / cartas[j].area;
+                    valor2 = cartas[j + 1].populacao / cartas[j + 1].area;
+                    break;
+                case CRITERIO_PIB_PER_CAPITA:
+                    valor1 = cartas[j].pib / cartas[j].populacao;
+                    valor2 = cartas[j + 1].pib / cartas[j + 1].populacao;
+                    break;
+                case CRITERIO_SUPER_PODER:
+                    valor1 =
+                        (cartas[j].populacao * cartas[j].pib) / cartas[j].area;
+                    valor2 = (cartas[j + 1].populacao * cartas[j + 1].pib) /
+                             cartas[j + 1].area;
+                    break;
             }
 
             if (valor1 < valor2)
@@ -110,27 +111,27 @@ int exibirRanking(CriterioRanking criterio)
         float valor = 0;
         switch (criterio)
         {
-        case CRITERIO_DENSIDADE:
-            valor = cartas[i].populacao / cartas[i].area;
-            break;
-        case CRITERIO_PIB_PER_CAPITA:
-            valor = cartas[i].pib / cartas[i].populacao;
-            break;
-        case CRITERIO_SUPER_PODER:
-            valor = (cartas[i].populacao * cartas[i].pib) / cartas[i].area;
-            break;
-        case CRITERIO_POPULACAO:
-            valor = cartas[i].populacao;
-            break;
-        case CRITERIO_PONTOS_TURISTICOS:
-            valor = cartas[i].pontosTuristicos;
-            break;
-        case CRITERIO_AREA:
-            valor = cartas[i].area;
-            break;
-        case CRITERIO_PIB:
-            valor = cartas[i].pib;
-            break;
+            case CRITERIO_DENSIDADE:
+                valor = cartas[i].populacao / cartas[i].area;
+                break;
+            case CRITERIO_PIB_PER_CAPITA:
+                valor = cartas[i].pib / cartas[i].populacao;
+                break;
+            case CRITERIO_SUPER_PODER:
+                valor = (cartas[i].populacao * cartas[i].pib) / cartas[i].area;
+                break;
+            case CRITERIO_POPULACAO:
+                valor = cartas[i].populacao;
+                break;
+            case CRITERIO_PONTOS_TURISTICOS:
+                valor = cartas[i].pontosTuristicos;
+                break;
+            case CRITERIO_AREA:
+                valor = cartas[i].area;
+                break;
+            case CRITERIO_PIB:
+                valor = cartas[i].pib;
+                break;
         }
         printf("%d. %s (%s): %.2f\n", i + 1, cartas[i].cidade, cartas[i].estado,
                valor);
@@ -182,21 +183,21 @@ float obterValorCriterio(const Carta *carta, CriterioRanking criterio)
 {
     switch (criterio)
     {
-    case CRITERIO_POPULACAO:
-        return (float)carta->populacao;
-    case CRITERIO_AREA:
-        return carta->area;
-    case CRITERIO_PIB:
-        return carta->pib;
-    case CRITERIO_PONTOS_TURISTICOS:
-        return (float)carta->pontosTuristicos;
-    case CRITERIO_DENSIDADE:
-        return carta->populacao / carta->area;
-    case CRITERIO_PIB_PER_CAPITA:
-        return (carta->pib * 1000000.0f) / carta->populacao;
-    case CRITERIO_SUPER_PODER:
-        return calcularSuperPoder(carta);
-    default:
-        return 0.0f;
+        case CRITERIO_POPULACAO:
+            return (float)carta->populacao;
+        case CRITERIO_AREA:
+            return carta->area;
+        case CRITERIO_PIB:
+            return carta->pib;
+        case CRITERIO_PONTOS_TURISTICOS:
+            return (float)carta->pontosTuristicos;
+        case CRITERIO_DENSIDADE:
+            return carta->populacao / carta->area;
+        case CRITERIO_PIB_PER_CAPITA:
+            return (carta->pib * 1000000.0f) / carta->populacao;
+        case CRITERIO_SUPER_PODER:
+            return calcularSuperPoder(carta);
+        default:
+            return 0.0f;
     }
 }

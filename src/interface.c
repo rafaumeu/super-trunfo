@@ -132,18 +132,18 @@ void alterarIdioma(void)
 
     switch (opcao)
     {
-    case 1:
-        setLanguage(LANG_PT_BR);
-        printf("\nIdioma alterado para Português!\n");
-        break;
-    case 2:
-        setLanguage(LANG_EN_US);
-        printf("\nLanguage changed to English!\n");
-        break;
-    case 3:
-        break;
-    default:
-        printf("Opção inválida!/Invalid option!\n");
+        case 1:
+            setLanguage(LANG_PT_BR);
+            printf("\nIdioma alterado para Português!\n");
+            break;
+        case 2:
+            setLanguage(LANG_EN_US);
+            printf("\nLanguage changed to English!\n");
+            break;
+        case 3:
+            break;
+        default:
+            printf("Opção inválida!/Invalid option!\n");
     }
 }
 

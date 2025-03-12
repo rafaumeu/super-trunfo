@@ -51,62 +51,62 @@ int main(int argc, char *argv[])
 
         switch (opcao)
         {
-        case 1:
-            limparTela();
-            criarCarta();
-            break;
-        case 2:
-            limparTela();
-            exibirUltimaCarta();
-            break;
-        case 3:
-            limparTela();
-            compararCartas();
-            break;
-        case 4:
-            limparTela();
-            listarCartas();
-            break;
-        case 5:
-            limparTela();
-            carregarUltimaCarta();
-            break;
-        case 6:
-            limparTela();
-            {
-                CriterioRanking criterio = selecionarCriterioRanking();
-                if (criterio != CRITERIO_POPULACAO || opcao != 8)
-                {
-                    aguardarEnter(); // Aguarda ENTER apenas se não estiver
-                                     // voltando
-                }
-            }
-            break;
-        case 7:
-            limparTela();
-            exibirInstrucoes();
-            break;
-        case 8:
-            limparTela();
-            alterarIdioma();
-            break;
-        case 9:
-            limparTela();
-            printf("%s\n", getMessage(MSG_CONFIRM_EXIT));
-            printf("%s ", getMessage(MSG_YES_NO));
-            char confirmacao;
-            scanf(" %c", &confirmacao);
-            confirmacao = toupper(confirmacao);
-            if (confirmacao == 'S' || confirmacao == 'Y')
-            {
+            case 1:
                 limparTela();
-                printf("%s\n", getMessage(MSG_THANKS));
-                return 0;
-            }
-            break;
-        default:
-            printf("%s\n", getMessage(MSG_INVALID_OPTION));
-            break;
+                criarCarta();
+                break;
+            case 2:
+                limparTela();
+                exibirUltimaCarta();
+                break;
+            case 3:
+                limparTela();
+                compararCartas();
+                break;
+            case 4:
+                limparTela();
+                listarCartas();
+                break;
+            case 5:
+                limparTela();
+                carregarUltimaCarta();
+                break;
+            case 6:
+                limparTela();
+                {
+                    CriterioRanking criterio = selecionarCriterioRanking();
+                    if (criterio != CRITERIO_POPULACAO || opcao != 8)
+                    {
+                        aguardarEnter(); // Aguarda ENTER apenas se não estiver
+                                         // voltando
+                    }
+                }
+                break;
+            case 7:
+                limparTela();
+                exibirInstrucoes();
+                break;
+            case 8:
+                limparTela();
+                alterarIdioma();
+                break;
+            case 9:
+                limparTela();
+                printf("%s\n", getMessage(MSG_CONFIRM_EXIT));
+                printf("%s ", getMessage(MSG_YES_NO));
+                char confirmacao;
+                scanf(" %c", &confirmacao);
+                confirmacao = toupper(confirmacao);
+                if (confirmacao == 'S' || confirmacao == 'Y')
+                {
+                    limparTela();
+                    printf("%s\n", getMessage(MSG_THANKS));
+                    return 0;
+                }
+                break;
+            default:
+                printf("%s\n", getMessage(MSG_INVALID_OPTION));
+                break;
         }
 
         if (opcao != 9)
