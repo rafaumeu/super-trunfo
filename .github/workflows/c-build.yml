@@ -2,30 +2,95 @@ name: C Build & Test
 
 on:
   push:
-    branches: [main]
+    branches: ["main", "master", "adventurer", "beginner"]
   pull_request:
-    branches: [main]
+    branches: ["main", "master", "adventurer", "beginner"]
 
 jobs:
-  build:
+  determine-level:
     runs-on: ubuntu-latest
+    outputs:
+      level: ${{ steps.set-level.outputs.level }}
     steps:
-      - uses: actions/checkout@v4
+      - id: set-level
+        run: |
+          if [[ "${{ github.base_ref }}" == "master" || "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "level=master" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.base_ref }}" == "adventurer" || "${{ github.ref }}" == "refs/heads/adventurer" ]]; then
+            echo "level=adventurer" >> $GITHUB_OUTPUT
+          else
+            echo "level=beginner" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Install GCC and dependencies
+  build:
+    needs: determine-level
+    runs-on: ubuntu-latest
+    env:
+      LEVEL: ${{ needs.determine-level.outputs.level }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configurar ambiente
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc make valgrind cppcheck
+          sudo apt-get install -y gcc make valgrind cppcheck clang-tidy
 
-      - name: Compile
+      - name: Cache dependências
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-build-${{ hashFiles('**/Makefile') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - name: Compilar
         run: |
-          gcc -Wall -Wextra -o supertrunfo supertrunfo.c -lm
+          make clean
+          if [[ "$LEVEL" == "master" ]]; then
+            make CFLAGS="-Wall -Wextra -Werror -O3 -g3"
+          elif [[ "$LEVEL" == "adventurer" ]]; then
+            make CFLAGS="-Wall -Wextra -O2 -g"
+          else
+            make CFLAGS="-Wall -g"
+          fi
 
-      - name: Static Analysis
+      - name: Executar testes
         run: |
-          cppcheck --enable=all --suppress=missingIncludeSystem ./
+          if [[ "$LEVEL" == "master" ]]; then
+            make test COVERAGE_MIN=90
+          elif [[ "$LEVEL" == "adventurer" ]]; then
+            make test COVERAGE_MIN=75
+          else
+            make test COVERAGE_MIN=60
+          fi
 
-      # Comment out or remove the memory check step that's causing the long wait
-      # - name: Memory Check
-      #   run: |
-      #     valgrind --leak-check=full ./supertrunfo
+      - name: Análise estática
+        run: |
+          if [[ "$LEVEL" == "master" ]]; then
+            cppcheck --enable=all --suppress=missingIncludeSystem ./src/*.c
+            clang-tidy src/*.c -- -I./include
+          elif [[ "$LEVEL" == "adventurer" ]]; then
+            cppcheck --enable=warning,performance ./src/*.c
+          else
+            cppcheck --enable=warning ./src/*.c
+          fi
+
+      - name: Verificar vazamentos de memória
+        run: |
+          if [[ "$LEVEL" == "master" ]]; then
+            valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 ./supertrunfo
+          elif [[ "$LEVEL" == "adventurer" ]]; then
+            valgrind --leak-check=full --error-exitcode=1 ./supertrunfo
+          else
+            valgrind --leak-check=yes --error-exitcode=1 ./supertrunfo
+          fi
+
+      - name: Upload artefatos
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            supertrunfo
+            tests/test_results
+            coverage/

@@ -1,9 +1,29 @@
-# Arquivos compilados
-*.exe
-*.out
-*.app
+# Diretórios de build
+bin/
+obj/
+
+# Arquivos de build
 *.o
-*.obj
+*.exe
+supertrunfo
+
+# Arquivos de IDE/Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de teste e cobertura
+coverage/
+*.gcda
+*.gcno
+
+# Arquivos de dependência
+*.d
 
 # Arquivos de debug
 *.dSYM/
@@ -14,18 +34,3 @@
 # Arquivos temporários
 *.tmp
 *.temp
-*~
-
-# Arquivos de IDE/Editor
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/settings.json
-!.vscode/c_cpp_properties.json
-.idea/
-*.swp
-*.swo
-
-# Arquivos de sistema
-.DS_Store
-Thumbs.db
