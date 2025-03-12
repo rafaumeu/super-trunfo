@@ -98,33 +98,34 @@ void testarPersistencia(void)
 
 void testarRanking(void)
 {
-    // Criar e salvar algumas cartas para teste
-    Carta carta1 = criarCartaTeste("R1", "SP", "São Paulo", 1000000, 1000.0f,
-                                   1000000.0f, 10);
-    Carta carta2 =
-        criarCartaTeste("R2", "RJ", "Rio", 500000, 500.0f, 500000.0f, 5);
-    Carta carta3 =
-        criarCartaTeste("R3", "MG", "BH", 250000, 250.0f, 250000.0f, 3);
+    printf("Testando funções de ranking...\n");
 
-    assert(salvarCarta(&carta1) == 1);
-    assert(salvarCarta(&carta2) == 1);
-    assert(salvarCarta(&carta3) == 1);
+    // Criar algumas cartas para testar
+    Carta carta1 = {"SP1", "SP", "São Paulo", 12000000, 1521.11f, 600.0f, 50};
+    Carta carta2 = {"RJ1",  "RJ", "Rio de Janeiro", 6700000, 1200.27f,
+                    350.0f, 40};
 
-    // Testar ranking por diferentes critérios
-    assert(exibirRanking(RANKING_POPULACAO) > 0);
-    assert(exibirRanking(RANKING_AREA) > 0);
-    assert(exibirRanking(RANKING_PIB) > 0);
-    assert(exibirRanking(RANKING_PONTOS_TURISTICOS) > 0);
-    assert(exibirRanking(RANKING_DENSIDADE) > 0);
-    assert(exibirRanking(RANKING_PIB_PER_CAPITA) > 0);
-    assert(exibirRanking(RANKING_SUPER_PODER) > 0);
+    // Salvar as cartas
+    assert(salvarCarta(&carta1));
+    assert(salvarCarta(&carta2));
 
-    printf("Teste de ranking: OK\n");
+    // Testar exibição do ranking com diferentes critérios
+    assert(exibirRanking(CRITERIO_POPULACAO) > 0);
+    assert(exibirRanking(CRITERIO_AREA) > 0);
+    assert(exibirRanking(CRITERIO_PIB) > 0);
+    assert(exibirRanking(CRITERIO_PONTOS_TURISTICOS) > 0);
+    assert(exibirRanking(CRITERIO_DENSIDADE) > 0);
+    assert(exibirRanking(CRITERIO_PIB_PER_CAPITA) > 0);
+    assert(exibirRanking(CRITERIO_SUPER_PODER) > 0);
+
+    printf("Testes de ranking concluídos com sucesso!\n");
 }
 
 // Função principal de testes
-void executarTestes(void)
+int executarTestes(void)
 {
+    int falhas = 0;
+
     desenharCabecalho("Executando Testes");
 
     testarInicializacao();
@@ -134,6 +135,16 @@ void executarTestes(void)
     testarRanking();
 
     desenharLinha();
-    printf("Todos os testes passaram!\n");
-    pausar();
+
+    printf("\nResultado dos testes: ");
+    if (falhas == 0)
+    {
+        printf("Todos os testes passaram!\n");
+        return 0;
+    }
+    else
+    {
+        printf("%d teste(s) falharam.\n", falhas);
+        return 1;
+    }
 }

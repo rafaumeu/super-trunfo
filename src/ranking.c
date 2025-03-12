@@ -1,5 +1,6 @@
 #include "../include/ranking.h"
 #include "../include/constantes.h"
+#include "../include/i18n.h"
 #include "../include/interface.h"
 #include "../include/persistencia.h"
 #include <stdio.h>
@@ -13,136 +14,189 @@ typedef struct
     float valor;
 } CartaRanking;
 
-// Função de comparação para qsort
-static int compararCartas(const void *a, const void *b)
-{
-    const CartaRanking *cartaA = (const CartaRanking *)a;
-    const CartaRanking *cartaB = (const CartaRanking *)b;
-
-    if (cartaA->valor < cartaB->valor)
-        return 1;
-    if (cartaA->valor > cartaB->valor)
-        return -1;
-    return 0;
-}
-
-// Função para obter o valor de ranking de uma carta
-static float obterValorRanking(const Carta *carta, CriterioRanking criterio)
-{
-    switch (criterio)
-    {
-    case RANKING_POPULACAO:
-        return (float)carta->populacao;
-    case RANKING_AREA:
-        return carta->area;
-    case RANKING_PIB:
-        return carta->pib;
-    case RANKING_PONTOS_TURISTICOS:
-        return (float)carta->pontosTuristicos;
-    case RANKING_DENSIDADE:
-        return carta->populacao / carta->area;
-    case RANKING_PIB_PER_CAPITA:
-        return carta->pib / carta->populacao;
-    case RANKING_SUPER_PODER:
-        return calcularSuperPoder(carta);
-    default:
-        return 0.0f;
-    }
-}
-
-// Função para obter o nome do critério
-static const char *obterNomeCriterio(CriterioRanking criterio)
-{
-    switch (criterio)
-    {
-    case RANKING_POPULACAO:
-        return "População";
-    case RANKING_AREA:
-        return "Área";
-    case RANKING_PIB:
-        return "PIB";
-    case RANKING_PONTOS_TURISTICOS:
-        return "Pontos Turísticos";
-    case RANKING_DENSIDADE:
-        return "Densidade Populacional";
-    case RANKING_PIB_PER_CAPITA:
-        return "PIB per Capita";
-    case RANKING_SUPER_PODER:
-        return "Super Poder";
-    default:
-        return "Desconhecido";
-    }
-}
-
 int exibirRanking(CriterioRanking criterio)
+{
+    Carta cartas[MAX_CARTAS];
+    int numCartas = carregarTodasCartas(cartas);
+
+    if (numCartas <= 0)
+    {
+        return 0;
+    }
+
+    MessageId msgId;
+    switch (criterio)
+    {
+    case CRITERIO_POPULACAO:
+        msgId = MSG_RANKING_POPULATION;
+        break;
+    case CRITERIO_AREA:
+        msgId = MSG_RANKING_AREA;
+        break;
+    case CRITERIO_PIB:
+        msgId = MSG_RANKING_GDP;
+        break;
+    case CRITERIO_PONTOS_TURISTICOS:
+        msgId = MSG_RANKING_TOURIST;
+        break;
+    case CRITERIO_DENSIDADE:
+        msgId = MSG_RANKING_DENSITY;
+        break;
+    case CRITERIO_PIB_PER_CAPITA:
+        msgId = MSG_RANKING_GDP_CAPITA;
+        break;
+    case CRITERIO_SUPER_PODER:
+        msgId = MSG_RANKING_POWER;
+        break;
+    default:
+        return 0;
+    }
+
+    limparTela();
+    printf("\n=== %s %s ===\n", getMessage(MSG_RANKING_BY), getMessage(msgId));
+
+    // Ordenar cartas pelo critério selecionado
+    for (int i = 0; i < numCartas - 1; i++)
+    {
+        for (int j = 0; j < numCartas - i - 1; j++)
+        {
+            float valor1 = 0, valor2 = 0;
+
+            switch (criterio)
+            {
+            case CRITERIO_POPULACAO:
+                valor1 = cartas[j].populacao;
+                valor2 = cartas[j + 1].populacao;
+                break;
+            case CRITERIO_AREA:
+                valor1 = cartas[j].area;
+                valor2 = cartas[j + 1].area;
+                break;
+            case CRITERIO_PIB:
+                valor1 = cartas[j].pib;
+                valor2 = cartas[j + 1].pib;
+                break;
+            case CRITERIO_PONTOS_TURISTICOS:
+                valor1 = cartas[j].pontosTuristicos;
+                valor2 = cartas[j + 1].pontosTuristicos;
+                break;
+            case CRITERIO_DENSIDADE:
+                valor1 = cartas[j].populacao / cartas[j].area;
+                valor2 = cartas[j + 1].populacao / cartas[j + 1].area;
+                break;
+            case CRITERIO_PIB_PER_CAPITA:
+                valor1 = cartas[j].pib / cartas[j].populacao;
+                valor2 = cartas[j + 1].pib / cartas[j + 1].populacao;
+                break;
+            case CRITERIO_SUPER_PODER:
+                valor1 = (cartas[j].populacao * cartas[j].pib) / cartas[j].area;
+                valor2 = (cartas[j + 1].populacao * cartas[j + 1].pib) /
+                         cartas[j + 1].area;
+                break;
+            }
+
+            if (valor1 < valor2)
+            {
+                Carta temp = cartas[j];
+                cartas[j] = cartas[j + 1];
+                cartas[j + 1] = temp;
+            }
+        }
+    }
+
+    // Exibir ranking
+    for (int i = 0; i < numCartas; i++)
+    {
+        float valor = 0;
+        switch (criterio)
+        {
+        case CRITERIO_DENSIDADE:
+            valor = cartas[i].populacao / cartas[i].area;
+            break;
+        case CRITERIO_PIB_PER_CAPITA:
+            valor = cartas[i].pib / cartas[i].populacao;
+            break;
+        case CRITERIO_SUPER_PODER:
+            valor = (cartas[i].populacao * cartas[i].pib) / cartas[i].area;
+            break;
+        case CRITERIO_POPULACAO:
+            valor = cartas[i].populacao;
+            break;
+        case CRITERIO_PONTOS_TURISTICOS:
+            valor = cartas[i].pontosTuristicos;
+            break;
+        case CRITERIO_AREA:
+            valor = cartas[i].area;
+            break;
+        case CRITERIO_PIB:
+            valor = cartas[i].pib;
+            break;
+        }
+        printf("%d. %s (%s): %.2f\n", i + 1, cartas[i].cidade, cartas[i].estado,
+               valor);
+    }
+
+    // Não chama aguardarEnter() aqui, deixa o controle para a função chamadora
+    return 1;
+}
+
+int carregarTodasCartas(Carta *cartas)
 {
     FILE *arquivo = fopen(ARQUIVO_CARTAS, "rb");
     if (arquivo == NULL)
     {
-        exibirMensagemErro("Nenhuma carta salva encontrada!");
         return 0;
     }
 
-    // Contar número de cartas
-    fseek(arquivo, 0, SEEK_END);
-    long tamanhoArquivo = ftell(arquivo);
-    int numCartas = tamanhoArquivo / sizeof(Carta);
-    rewind(arquivo);
-
-    // Alocar memória para o array de cartas
-    CartaRanking *cartas = malloc(numCartas * sizeof(CartaRanking));
-    if (cartas == NULL)
+    int numCartas = 0;
+    while (numCartas < MAX_CARTAS &&
+           fread(&cartas[numCartas], sizeof(Carta), 1, arquivo) == 1)
     {
-        exibirMensagemErro("Erro ao alocar memória!");
-        fclose(arquivo);
-        return 0;
+        numCartas++;
     }
 
-    // Ler todas as cartas
-    for (int i = 0; i < numCartas; i++)
-    {
-        fread(&cartas[i].carta, sizeof(Carta), 1, arquivo);
-        cartas[i].valor = obterValorRanking(&cartas[i].carta, criterio);
-    }
     fclose(arquivo);
-
-    // Ordenar cartas
-    qsort(cartas, numCartas, sizeof(CartaRanking), compararCartas);
-
-    // Exibir ranking
-    desenharCabecalho("Ranking por ");
-    printf("%s\n\n", obterNomeCriterio(criterio));
-
-    for (int i = 0; i < numCartas; i++)
-    {
-        printf("%dº Lugar:\n", i + 1);
-        printf("Cidade: %s (%s)\n", cartas[i].carta.cidade,
-               cartas[i].carta.estado);
-        printf("Valor: %.2f\n", cartas[i].valor);
-        desenharLinha();
-    }
-
-    free(cartas);
     return numCartas;
 }
 
-CriterioRanking selecionarCriterioRanking(void)
+void ordenarCartas(Carta *cartas, int numCartas, CriterioRanking criterio)
 {
-    desenharCabecalho("Selecione o Critério de Ranking");
-    printf("1. População\n");
-    printf("2. Área\n");
-    printf("3. PIB\n");
-    printf("4. Pontos Turísticos\n");
-    printf("5. Densidade Populacional\n");
-    printf("6. PIB per Capita\n");
-    printf("7. Super Poder\n");
-    desenharLinha();
-
-    int opcao;
-    do
+    for (int i = 0; i < numCartas - 1; i++)
     {
-        opcao = lerOpcao(1, 7);
-    } while (opcao < 1 || opcao > 7);
+        for (int j = 0; j < numCartas - i - 1; j++)
+        {
+            float valor1 = obterValorCriterio(&cartas[j], criterio);
+            float valor2 = obterValorCriterio(&cartas[j + 1], criterio);
 
-    return (CriterioRanking)(opcao - 1);
+            if (valor1 < valor2)
+            {
+                Carta temp = cartas[j];
+                cartas[j] = cartas[j + 1];
+                cartas[j + 1] = temp;
+            }
+        }
+    }
+}
+
+float obterValorCriterio(const Carta *carta, CriterioRanking criterio)
+{
+    switch (criterio)
+    {
+    case CRITERIO_POPULACAO:
+        return (float)carta->populacao;
+    case CRITERIO_AREA:
+        return carta->area;
+    case CRITERIO_PIB:
+        return carta->pib;
+    case CRITERIO_PONTOS_TURISTICOS:
+        return (float)carta->pontosTuristicos;
+    case CRITERIO_DENSIDADE:
+        return carta->populacao / carta->area;
+    case CRITERIO_PIB_PER_CAPITA:
+        return (carta->pib * 1000000.0f) / carta->populacao;
+    case CRITERIO_SUPER_PODER:
+        return calcularSuperPoder(carta);
+    default:
+        return 0.0f;
+    }
 }

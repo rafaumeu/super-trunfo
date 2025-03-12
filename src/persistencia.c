@@ -1,28 +1,63 @@
 #include "../include/persistencia.h"
 #include "../include/constantes.h"
+#include "../include/i18n.h"
 #include "../include/interface.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
 #define ARQUIVO_CARTAS "cartas.dat"
 
-// Funções auxiliares de validação (declaradas em carta.c)
-extern int validarEspacoDisco(void);
-extern int validarArquivo(const char *arquivo, const char *modo);
-
-int salvarCarta(const Carta *carta)
+bool validarEspacoDisco()
 {
-    // Verificar espaço em disco
+    // Tenta criar um arquivo temporário para testar o espaço em disco
+    FILE *temp = fopen("temp.txt", "w");
+    if (temp == NULL)
+    {
+        return false;
+    }
+
+    // Tenta escrever 1MB de dados
+    char buffer[1024] = {0};
+    for (int i = 0; i < 1024; i++)
+    {
+        if (fwrite(buffer, 1, sizeof(buffer), temp) != sizeof(buffer))
+        {
+            fclose(temp);
+            remove("temp.txt");
+            return false;
+        }
+    }
+
+    fclose(temp);
+    remove("temp.txt");
+    return true;
+}
+
+bool validarArquivo(const char *arquivo)
+{
+    FILE *fp = fopen(arquivo, "r");
+    if (fp == NULL)
+    {
+        return false;
+    }
+    fclose(fp);
+    return true;
+}
+
+bool salvarCarta(const Carta *carta)
+{
     if (!validarEspacoDisco())
     {
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_DISK_SPACE));
+        return false;
     }
 
     FILE *arquivo = fopen(ARQUIVO_CARTAS, "ab");
     if (arquivo == NULL)
     {
-        exibirMensagemErro("Erro ao abrir arquivo para salvar!");
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_FILE_OPEN));
+        return false;
     }
 
     size_t escritos = fwrite(carta, sizeof(Carta), 1, arquivo);
@@ -30,81 +65,74 @@ int salvarCarta(const Carta *carta)
 
     if (escritos != 1)
     {
-        exibirMensagemErro("Erro ao salvar carta!");
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_FILE_SAVE));
+        return false;
     }
 
-    return 1;
+    printf("%s\n", getMessage(MSG_SUCCESS_SAVE));
+    return true;
 }
 
-int carregarCarta(Carta *carta)
+bool carregarCarta(Carta *carta)
 {
-    // Verificar se o arquivo existe
-    if (!validarArquivo(ARQUIVO_CARTAS, "rb"))
+    if (!validarArquivo(ARQUIVO_CARTAS))
     {
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_FILE_OPEN));
+        return false;
     }
 
     FILE *arquivo = fopen(ARQUIVO_CARTAS, "rb");
     if (arquivo == NULL)
     {
-        exibirMensagemErro("Erro ao abrir arquivo para leitura!");
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_FILE_OPEN));
+        return false;
     }
 
-    // Posicionar no final do arquivo
-    fseek(arquivo, -(long)sizeof(Carta), SEEK_END);
-
+    fseek(arquivo, -((long)sizeof(Carta)), SEEK_END);
     size_t lidos = fread(carta, sizeof(Carta), 1, arquivo);
     fclose(arquivo);
 
     if (lidos != 1)
     {
-        exibirMensagemErro("Erro ao carregar carta!");
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_FILE_READ));
+        return false;
     }
 
-    return 1;
+    printf("%s\n", getMessage(MSG_SUCCESS_LOAD));
+    return true;
 }
 
-int listarCartas(void)
+bool listarCartas()
 {
-    // Verificar se o arquivo existe
-    if (!validarArquivo(ARQUIVO_CARTAS, "rb"))
+    if (!validarArquivo(ARQUIVO_CARTAS))
     {
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_FILE_OPEN));
+        return false;
     }
 
     FILE *arquivo = fopen(ARQUIVO_CARTAS, "rb");
     if (arquivo == NULL)
     {
-        exibirMensagemErro("Erro ao abrir arquivo para leitura!");
-        return 0;
+        printf("%s\n", getMessage(MSG_ERROR_FILE_OPEN));
+        return false;
     }
 
-    // Contar número de cartas
-    fseek(arquivo, 0, SEEK_END);
-    long tamanhoArquivo = ftell(arquivo);
-    int numCartas = tamanhoArquivo / sizeof(Carta);
-    rewind(arquivo);
-
-    // Exibir cartas
-    desenharCabecalho("Lista de Cartas");
-    printf("Total de cartas: %d\n\n", numCartas);
-
     Carta carta;
-    for (int i = 0; i < numCartas; i++)
+    int contador = 0;
+
+    while (fread(&carta, sizeof(Carta), 1, arquivo) == 1)
     {
-        if (fread(&carta, sizeof(Carta), 1, arquivo) != 1)
-        {
-            exibirMensagemErro("Erro ao ler carta!");
-            fclose(arquivo);
-            return 0;
-        }
-        printf("Carta %d:\n", i + 1);
-        exibirCarta(&carta);
+        printf("\n=== Carta %d ===\n", ++contador);
+        printf("%s: %s\n", getMessage(MSG_CARD_CODE), carta.codigo);
+        printf("%s: %s\n", getMessage(MSG_CARD_STATE), carta.estado);
+        printf("%s: %s\n", getMessage(MSG_CARD_CITY), carta.cidade);
+        printf("%s: %d\n", getMessage(MSG_CARD_POPULATION), carta.populacao);
+        printf("%s: %.2f\n", getMessage(MSG_CARD_AREA), carta.area);
+        printf("%s: %.2f\n", getMessage(MSG_CARD_GDP), carta.pib);
+        printf("%s: %d\n", getMessage(MSG_CARD_TOURIST),
+               carta.pontosTuristicos);
     }
 
     fclose(arquivo);
-    return numCartas;
+    return true;
 }

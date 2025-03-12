@@ -1,10 +1,10 @@
 #include "../include/carta.h"
 #include "../include/constantes.h"
+#include "../include/i18n.h"
 #include "../include/interface.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/statvfs.h>
 
 // Constantes de validação
 #define TAMANHO_MAXIMO_CODIGO 3
@@ -13,154 +13,92 @@
 #define VALOR_MINIMO_NUMERICO 0
 
 // Funções de validação
-static int validarCodigo(const char *codigo)
+bool validarCodigo(const char *codigo)
 {
-    // Verifica tamanho
     if (strlen(codigo) != TAMANHO_MAXIMO_CODIGO)
     {
         exibirMensagemErro("O código deve ter exatamente 3 caracteres!");
-        return 0;
+        return false;
     }
 
-    // Verifica se é alfanumérico
     for (int i = 0; codigo[i]; i++)
     {
         if (!isalnum(codigo[i]))
         {
             exibirMensagemErro("O código deve conter apenas letras e números!");
-            return 0;
+            return false;
         }
     }
 
-    return 1;
+    return true;
 }
 
-static int validarEstado(const char *estado)
+bool validarEstado(const char *estado)
 {
-    // Verifica tamanho
     if (strlen(estado) != TAMANHO_MAXIMO_ESTADO)
     {
         exibirMensagemErro(
             "A sigla do estado deve ter exatamente 2 caracteres!");
-        return 0;
+        return false;
     }
 
-    // Verifica se são letras maiúsculas
     for (int i = 0; estado[i]; i++)
     {
         if (!isupper(estado[i]))
         {
             exibirMensagemErro(
                 "A sigla do estado deve conter apenas letras maiúsculas!");
-            return 0;
+            return false;
         }
     }
 
     // Verifica se é uma UF válida
-    int ufValida = 0;
     for (int i = 0; i < NUM_UFS; i++)
     {
         if (strcmp(estado, UFS_VALIDAS[i]) == 0)
         {
-            ufValida = 1;
-            break;
+            return true;
         }
     }
 
-    if (!ufValida)
-    {
-        exibirMensagemErro(
-            "UF inválida! Use uma sigla válida de estado brasileiro.");
-        return 0;
-    }
-
-    return 1;
+    exibirMensagemErro(
+        "UF inválida! Use uma sigla válida de estado brasileiro.");
+    return false;
 }
 
-static int validarCidade(const char *cidade)
+bool validarCidade(const char *cidade)
 {
-    // Verifica se está vazio
     if (strlen(cidade) == 0)
     {
         exibirMensagemErro("O nome da cidade não pode estar vazio!");
-        return 0;
+        return false;
     }
 
-    // Verifica tamanho máximo
     if (strlen(cidade) > TAMANHO_MAXIMO_CIDADE)
     {
         exibirMensagemErro("O nome da cidade é muito longo!");
-        return 0;
+        return false;
     }
 
-    // Verifica se começa com letra
     if (!isalpha(cidade[0]))
     {
         exibirMensagemErro("O nome da cidade deve começar com uma letra!");
-        return 0;
+        return false;
     }
 
-    return 1;
+    return true;
 }
 
-static int validarValorNumerico(const char *campo, float valor)
+bool validarValorNumerico(float valor)
 {
     if (valor <= VALOR_MINIMO_NUMERICO)
     {
         char mensagem[100];
-        sprintf(mensagem, "O valor de %s deve ser maior que zero!", campo);
+        sprintf(mensagem, "O valor deve ser maior que zero!");
         exibirMensagemErro(mensagem);
-        return 0;
+        return false;
     }
-    return 1;
-}
-
-static int validarEspacoDisco(void)
-{
-#ifdef _WIN32
-    // Implementação para Windows usando GetDiskFreeSpaceEx
-    ULARGE_INTEGER espacoLivre;
-    if (!GetDiskFreeSpaceEx(NULL, &espacoLivre, NULL, NULL))
-    {
-        exibirMensagemErro("Erro ao verificar espaço em disco!");
-        return 0;
-    }
-    return espacoLivre.QuadPart >= ESPACO_MINIMO_DISCO;
-#else
-    // Implementação para sistemas Unix-like
-    struct statvfs stat;
-    if (statvfs(".", &stat) != 0)
-    {
-        exibirMensagemErro("Erro ao verificar espaço em disco!");
-        return 0;
-    }
-    unsigned long long espacoLivre = stat.f_bsize * stat.f_bavail;
-    if (espacoLivre < ESPACO_MINIMO_DISCO)
-    {
-        exibirMensagemErro("Espaço insuficiente em disco!");
-        return 0;
-    }
-    return 1;
-#endif
-}
-
-static int validarArquivo(const char *arquivo, const char *modo)
-{
-    FILE *fp = fopen(arquivo, modo);
-    if (fp == NULL)
-    {
-        if (strcmp(modo, "rb") == 0)
-        {
-            exibirMensagemErro("Arquivo não encontrado!");
-        }
-        else
-        {
-            exibirMensagemErro("Não foi possível acessar o arquivo!");
-        }
-        return 0;
-    }
-    fclose(fp);
-    return 1;
+    return true;
 }
 
 void inicializarCarta(Carta *carta)
@@ -176,85 +114,56 @@ void inicializarCarta(Carta *carta)
 
 void lerDadosCarta(Carta *carta)
 {
-    char buffer[100];
+    printf("\n=== %s ===\n", getMessage(MSG_MENU_NEW_CARD));
 
-    // Verificar espaço em disco antes de começar
-    if (!validarEspacoDisco())
-    {
-        return;
-    }
-
-    // Ler código
     do
     {
-        printf("Digite o código da carta (3 caracteres): ");
-        scanf("%s", buffer);
-        getchar(); // Limpar o buffer
-    } while (!validarCodigo(buffer));
-    strcpy(carta->codigo, buffer);
+        printf("%s (3 caracteres): ", getMessage(MSG_CARD_CODE));
+        scanf("%3s", carta->codigo);
+        getchar(); // Limpa o buffer
+    } while (!validarCodigo(carta->codigo));
 
-    // Ler estado
     do
     {
-        printf("Digite a sigla do estado (2 letras maiúsculas): ");
-        scanf("%s", buffer);
-        getchar(); // Limpar o buffer
-    } while (!validarEstado(buffer));
-    strcpy(carta->estado, buffer);
+        printf("%s (2 letras): ", getMessage(MSG_CARD_STATE));
+        scanf("%2s", carta->estado);
+        getchar(); // Limpa o buffer
+    } while (!validarEstado(carta->estado));
 
-    // Ler cidade
     do
     {
-        printf("Digite o nome da cidade: ");
-        fgets(buffer, sizeof(buffer), stdin);
-        buffer[strcspn(buffer, "\n")] = 0; // Remover o \n
-    } while (!validarCidade(buffer));
-    strcpy(carta->cidade, buffer);
+        printf("%s (max 50 caracteres): ", getMessage(MSG_CARD_CITY));
+        fgets(carta->cidade, sizeof(carta->cidade), stdin);
+        carta->cidade[strcspn(carta->cidade, "\n")] = 0; // Remove o \n
+    } while (!validarCidade(carta->cidade));
 
-    // Ler população
     do
     {
-        printf("Digite a população: ");
+        printf("%s: ", getMessage(MSG_CARD_POPULATION));
         scanf("%d", &carta->populacao);
-        getchar(); // Limpar o buffer
-    } while (!validarValorNumerico("população", carta->populacao));
+        getchar(); // Limpa o buffer
+    } while (!validarValorNumerico(carta->populacao));
 
-    // Ler área
     do
     {
-        printf("Digite a área (km²): ");
+        printf("%s: ", getMessage(MSG_CARD_AREA));
         scanf("%f", &carta->area);
-        getchar(); // Limpar o buffer
-    } while (!validarValorNumerico("área", carta->area));
+        getchar(); // Limpa o buffer
+    } while (!validarValorNumerico(carta->area));
 
-    // Ler PIB
     do
     {
-        printf("Digite o PIB (em milhões): ");
+        printf("%s: ", getMessage(MSG_CARD_GDP));
         scanf("%f", &carta->pib);
-        getchar(); // Limpar o buffer
-    } while (!validarValorNumerico("PIB", carta->pib));
+        getchar(); // Limpa o buffer
+    } while (!validarValorNumerico(carta->pib));
 
-    // Ler pontos turísticos
     do
     {
-        printf("Digite o número de pontos turísticos: ");
+        printf("%s: ", getMessage(MSG_CARD_TOURIST));
         scanf("%d", &carta->pontosTuristicos);
-        getchar(); // Limpar o buffer
-    } while (
-        !validarValorNumerico("pontos turísticos", carta->pontosTuristicos));
-}
-
-void exibirCarta(const Carta *carta)
-{
-    desenharLinha();
-    printf("Código: %s\n", carta->codigo);
-    printf("Cidade: %s (%s)\n", carta->cidade, carta->estado);
-    printf("População: %d habitantes\n", carta->populacao);
-    printf("Área: %.2f km²\n", carta->area);
-    printf("PIB: %.2f milhões\n", carta->pib);
-    printf("Pontos Turísticos: %d\n", carta->pontosTuristicos);
-    desenharLinha();
+        getchar(); // Limpa o buffer
+    } while (!validarValorNumerico(carta->pontosTuristicos));
 }
 
 void calcularIndicadores(Carta *carta)
@@ -272,14 +181,9 @@ void calcularIndicadores(Carta *carta)
 
 float calcularSuperPoder(const Carta *carta)
 {
-    // Normalização dos valores
-    float popNorm = carta->populacao / 1000000.0f;  // Em milhões
-    float areaNorm = carta->area / 1000.0f;         // Em milhares de km²
-    float pibNorm = carta->pib / 1000.0f;           // Em bilhões
-    float ptNorm = carta->pontosTuristicos / 10.0f; // Em dezenas
-
-    // Média ponderada
-    return (popNorm * 0.3f + areaNorm * 0.2f + pibNorm * 0.3f + ptNorm * 0.2f);
+    return (carta->populacao * 0.45f + carta->area * 0.35f +
+            carta->pib * 0.15f + carta->pontosTuristicos * 0.05f) /
+           1000.0f;
 }
 
 float obterValorAtributo(const Carta *carta, int atributo)
