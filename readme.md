@@ -44,6 +44,7 @@ super_trunfo/
 
 ### Dados de Entrada
 
+<<<<<<< HEAD
 - Código: 3 caracteres alfanuméricos
 - Estado: 2 letras maiúsculas (UF válida)
 - Cidade: Nome não vazio, máximo 50 caracteres
@@ -55,8 +56,41 @@ super_trunfo/
 - Valida existência e acesso a arquivos
 - Verifica alocação de memória
 - Trata erros de leitura/escrita
+||||||| 07e7ba7
+- Basic card registration
+- Data visualization
+- Unique code system
 
+### 🏃 Adventurer Level (Implemented)
+
+- Population density calculation
+- GDP per capita calculation
+- Advanced data analysis
+- Decision structures for card classification
+- Enhanced visual formatting
+=======
+- Population density calculation
+- GDP per capita calculation
+- Advanced data analysis
+- Decision structures for card classification
+- Enhanced visual formatting
+>>>>>>> origin/main
+
+<<<<<<< HEAD
 ### Testes Automatizados
+||||||| 07e7ba7
+### 👑 Master Level (Implemented)
+=======
+### 🏃 Adventurer Level (Implemented)
+
+- Interactive attribute selection menu
+- Multiple comparison modes (6 attributes)
+- Inverse comparison rules for density
+- Input validation system
+- Advanced result display formatting
+
+### 👑 Master Level (Implemented)
+>>>>>>> origin/main
 
 - Testes de inicialização
 - Testes de comparação
