@@ -4,23 +4,41 @@
  */
 
 #include "../include/carta.h"
+#include "../include/i18n.h"
 #include "../include/interface.h"
 #include "../include/jogo.h"
 #include "../include/persistencia.h"
 #include "../include/ranking.h"
 #include "../include/testes.h"
+#include <ctype.h> // Para toupper()
+#include <locale.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
-    // Verifica se é modo teste
-    if (argc > 1 && strcmp(argv[1], "--test") == 0)
+    setlocale(LC_ALL, "Portuguese");
+
+    // Define o idioma com base no argumento de linha de comando
+    if (argc > 1 && strcmp(argv[1], "en") == 0)
     {
-        executarTestes();
-        return 0;
+        setLanguage(LANG_EN_US);
+    }
+    else
+    {
+        setLanguage(LANG_PT_BR);
+    }
+
+    // Executa os testes se solicitado
+    if (argc > 1 && strcmp(argv[1], "test") == 0)
+    {
+        limparTela();
+        return executarTestes();
     }
 
     // Inicialização do jogo
+    limparTela();
     iniciarJogo();
 
     // Loop principal
@@ -28,89 +46,76 @@ int main(int argc, char *argv[])
     do
     {
         exibirMenu();
-        opcao = lerOpcao(0, 8); // 0 para sair, 1-8 para opções do jogo
+        scanf("%d", &opcao);
+        getchar(); // Limpa o buffer
 
         switch (opcao)
         {
         case 1:
-            // Criar nova carta
-            {
-                Carta novaCarta;
-                inicializarCarta(&novaCarta);
-                lerDadosCarta(&novaCarta);
-                calcularIndicadores(&novaCarta);
-                exibirCarta(&novaCarta);
-                if (salvarCarta(&novaCarta))
-                {
-                    printf("\nCarta salva com sucesso!\n");
-                }
-                pausar();
-            }
+            limparTela();
+            criarCarta();
             break;
         case 2:
-            // Exibir última carta
-            {
-                Carta carta;
-                if (carregarCarta(&carta))
-                {
-                    exibirCarta(&carta);
-                    printf("\nSuper Poder: %.2f\n", calcularSuperPoder(&carta));
-                }
-                pausar();
-            }
+            limparTela();
+            exibirUltimaCarta();
             break;
         case 3:
-            // Comparar cartas
+            limparTela();
             compararCartas();
             break;
         case 4:
-            // Listar cartas salvas
+            limparTela();
             listarCartas();
-            pausar();
             break;
         case 5:
-            // Carregar última carta
-            {
-                Carta carta;
-                if (carregarCarta(&carta))
-                {
-                    printf("\nCarta carregada com sucesso!\n");
-                    exibirCarta(&carta);
-                }
-                pausar();
-            }
+            limparTela();
+            carregarUltimaCarta();
             break;
         case 6:
-            // Exibir ranking
+            limparTela();
             {
                 CriterioRanking criterio = selecionarCriterioRanking();
-                exibirRanking(criterio);
-                pausar();
+                if (criterio != CRITERIO_POPULACAO || opcao != 8)
+                {
+                    aguardarEnter(); // Aguarda ENTER apenas se não estiver
+                                     // voltando
+                }
             }
             break;
         case 7:
-            // Executar testes
-            executarTestes();
+            limparTela();
+            exibirInstrucoes();
             break;
         case 8:
-            // Ajuda/Instruções
-            desenharCabecalho("Ajuda");
-            printf("Este é o Super Trunfo de Cidades!\n\n");
-            printf("1. Crie uma carta com dados da cidade\n");
-            printf("2. Visualize os dados da carta\n");
-            printf("3. Compare duas cartas pelos atributos\n");
-            printf("4. Liste todas as cartas salvas\n");
-            printf("5. Carregue a última carta salva\n");
-            printf("6. Veja o ranking das cartas\n");
-            printf("7. Execute os testes do sistema\n");
-            desenharLinha();
-            pausar();
+            limparTela();
+            alterarIdioma();
             break;
-        case 0:
-            // Sair
+        case 9:
+            limparTela();
+            printf("%s\n", getMessage(MSG_CONFIRM_EXIT));
+            printf("%s ", getMessage(MSG_YES_NO));
+            char confirmacao;
+            scanf(" %c", &confirmacao);
+            confirmacao = toupper(confirmacao);
+            if (confirmacao == 'S' || confirmacao == 'Y')
+            {
+                limparTela();
+                printf("%s\n", getMessage(MSG_THANKS));
+                return 0;
+            }
+            break;
+        default:
+            printf("%s\n", getMessage(MSG_INVALID_OPTION));
             break;
         }
-    } while (opcao != 0);
+
+        if (opcao != 9)
+        {
+            printf("\nPressione ENTER para continuar...");
+            getchar();
+            limparTela();
+        }
+    } while (opcao != 9);
 
     // Finalização do jogo
     finalizarJogo();
