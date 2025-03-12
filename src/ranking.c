@@ -1,4 +1,5 @@
 #include "../include/ranking.h"
+#include "../include/constantes.h"
 #include "../include/interface.h"
 #include "../include/persistencia.h"
 #include <stdio.h>
