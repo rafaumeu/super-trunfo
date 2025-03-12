@@ -8,8 +8,10 @@ void exibirMenu(void)
     printf("1. Criar nova carta\n");
     printf("2. Exibir última carta\n");
     printf("3. Comparar cartas\n");
-    printf("4. Executar testes\n");
-    printf("5. Ajuda/Instruções\n");
+    printf("4. Listar cartas salvas\n");
+    printf("5. Carregar última carta\n");
+    printf("6. Executar testes\n");
+    printf("7. Ajuda/Instruções\n");
     printf("0. Sair\n");
     desenharLinha();
     printf("Escolha uma opção: ");

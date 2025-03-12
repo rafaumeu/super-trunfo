@@ -6,6 +6,7 @@
 #include "../include/carta.h"
 #include "../include/interface.h"
 #include "../include/jogo.h"
+#include "../include/persistencia.h"
 #include "../include/testes.h"
 #include <stdio.h>
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
     do
     {
         exibirMenu();
-        opcao = lerOpcao(0, 5); // 0 para sair, 1-5 para opções do jogo
+        opcao = lerOpcao(0, 7); // 0 para sair, 1-7 para opções do jogo
 
         switch (opcao)
         {
@@ -38,6 +39,10 @@ int main(int argc, char *argv[])
                 lerDadosCarta(&novaCarta);
                 calcularIndicadores(&novaCarta);
                 exibirCarta(&novaCarta);
+                if (salvarCarta(&novaCarta))
+                {
+                    printf("\nCarta salva com sucesso!\n");
+                }
                 pausar();
             }
             break;
@@ -45,10 +50,11 @@ int main(int argc, char *argv[])
             // Exibir última carta
             {
                 Carta carta;
-                inicializarCarta(&carta);
-                lerDadosCarta(&carta);
-                exibirCarta(&carta);
-                printf("\nSuper Poder: %.2f\n", calcularSuperPoder(&carta));
+                if (carregarCarta(&carta))
+                {
+                    exibirCarta(&carta);
+                    printf("\nSuper Poder: %.2f\n", calcularSuperPoder(&carta));
+                }
                 pausar();
             }
             break;
@@ -57,17 +63,36 @@ int main(int argc, char *argv[])
             compararCartas();
             break;
         case 4:
+            // Listar cartas salvas
+            listarCartas();
+            pausar();
+            break;
+        case 5:
+            // Carregar última carta
+            {
+                Carta carta;
+                if (carregarCarta(&carta))
+                {
+                    printf("\nCarta carregada com sucesso!\n");
+                    exibirCarta(&carta);
+                }
+                pausar();
+            }
+            break;
+        case 6:
             // Executar testes
             executarTestes();
             break;
-        case 5:
+        case 7:
             // Ajuda/Instruções
             desenharCabecalho("Ajuda");
             printf("Este é o Super Trunfo de Cidades!\n\n");
             printf("1. Crie uma carta com dados da cidade\n");
             printf("2. Visualize os dados da carta\n");
             printf("3. Compare duas cartas pelos atributos\n");
-            printf("4. Execute os testes do sistema\n");
+            printf("4. Liste todas as cartas salvas\n");
+            printf("5. Carregue a última carta salva\n");
+            printf("6. Execute os testes do sistema\n");
             desenharLinha();
             pausar();
             break;

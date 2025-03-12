@@ -1,8 +1,10 @@
 #include "../include/carta.h"
 #include "../include/interface.h"
 #include "../include/jogo.h"
+#include "../include/persistencia.h"
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 // Função auxiliar para criar uma carta de teste
 static Carta criarCartaTeste(const char *codigo, const char *estado,
@@ -62,6 +64,37 @@ void testarSuperPoder(void)
     printf("Teste de super poder: OK\n");
 }
 
+void testarPersistencia(void)
+{
+    // Criar uma carta para teste
+    Carta cartaOriginal =
+        criarCartaTeste("T1", "TS", "Teste", 100000, 100.0f, 100000.0f, 5);
+
+    // Salvar a carta
+    assert(salvarCarta(&cartaOriginal) == 1);
+    printf("Teste de salvamento: OK\n");
+
+    // Carregar a carta
+    Carta cartaCarregada;
+    assert(carregarCarta(&cartaCarregada) == 1);
+
+    // Verificar se os dados são iguais
+    assert(strcmp(cartaCarregada.codigo, cartaOriginal.codigo) == 0);
+    assert(strcmp(cartaCarregada.estado, cartaOriginal.estado) == 0);
+    assert(strcmp(cartaCarregada.cidade, cartaOriginal.cidade) == 0);
+    assert(cartaCarregada.populacao == cartaOriginal.populacao);
+    assert(cartaCarregada.area == cartaOriginal.area);
+    assert(cartaCarregada.pib == cartaOriginal.pib);
+    assert(cartaCarregada.pontosTuristicos == cartaOriginal.pontosTuristicos);
+
+    printf("Teste de carregamento: OK\n");
+
+    // Testar listagem
+    int numCartas = listarCartas();
+    assert(numCartas > 0);
+    printf("Teste de listagem: OK\n");
+}
+
 // Função principal de testes
 void executarTestes(void)
 {
@@ -70,6 +103,7 @@ void executarTestes(void)
     testarInicializacao();
     testarComparacao();
     testarSuperPoder();
+    testarPersistencia();
 
     desenharLinha();
     printf("Todos os testes passaram!\n");

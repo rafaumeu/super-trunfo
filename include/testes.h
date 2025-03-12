@@ -5,6 +5,7 @@
 void testarInicializacao(void);
 void testarComparacao(void);
 void testarSuperPoder(void);
+void testarPersistencia(void);
 void executarTestes(void);
 
 #endif // TESTES_H
