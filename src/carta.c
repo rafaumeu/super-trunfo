@@ -4,149 +4,212 @@
 #include <stdio.h>
 #include <string.h>
 
-void inicializarCarta(Carta *carta) { memset(carta, 0, sizeof(Carta)); }
+// Constantes de validação
+#define TAMANHO_MAXIMO_CODIGO 3
+#define TAMANHO_MAXIMO_ESTADO 2
+#define TAMANHO_MAXIMO_CIDADE 50
+#define VALOR_MINIMO_NUMERICO 0
 
-// Funções auxiliares de validação
+// Funções de validação
 static int validarCodigo(const char *codigo)
 {
-    if (strlen(codigo) != 2)
+    // Verifica tamanho
+    if (strlen(codigo) != TAMANHO_MAXIMO_CODIGO)
+    {
+        exibirMensagemErro("O código deve ter exatamente 3 caracteres!");
         return 0;
-    if (!isalpha(codigo[0]) || !isdigit(codigo[1]))
-        return 0;
+    }
+
+    // Verifica se é alfanumérico
+    for (int i = 0; codigo[i]; i++)
+    {
+        if (!isalnum(codigo[i]))
+        {
+            exibirMensagemErro("O código deve conter apenas letras e números!");
+            return 0;
+        }
+    }
+
     return 1;
 }
 
 static int validarEstado(const char *estado)
 {
-    if (strlen(estado) != 2)
+    // Verifica tamanho
+    if (strlen(estado) != TAMANHO_MAXIMO_ESTADO)
+    {
+        exibirMensagemErro(
+            "A sigla do estado deve ter exatamente 2 caracteres!");
         return 0;
-    if (!isalpha(estado[0]) || !isalpha(estado[1]))
-        return 0;
+    }
+
+    // Verifica se são letras maiúsculas
+    for (int i = 0; estado[i]; i++)
+    {
+        if (!isupper(estado[i]))
+        {
+            exibirMensagemErro(
+                "A sigla do estado deve conter apenas letras maiúsculas!");
+            return 0;
+        }
+    }
+
     return 1;
 }
 
 static int validarCidade(const char *cidade)
 {
-    if (strlen(cidade) < 2 || strlen(cidade) >= 50)
+    // Verifica se está vazio
+    if (strlen(cidade) == 0)
+    {
+        exibirMensagemErro("O nome da cidade não pode estar vazio!");
         return 0;
+    }
+
+    // Verifica tamanho máximo
+    if (strlen(cidade) > TAMANHO_MAXIMO_CIDADE)
+    {
+        exibirMensagemErro("O nome da cidade é muito longo!");
+        return 0;
+    }
+
+    // Verifica se começa com letra
+    if (!isalpha(cidade[0]))
+    {
+        exibirMensagemErro("O nome da cidade deve começar com uma letra!");
+        return 0;
+    }
+
     return 1;
+}
+
+static int validarValorNumerico(const char *campo, float valor)
+{
+    if (valor <= VALOR_MINIMO_NUMERICO)
+    {
+        char mensagem[100];
+        sprintf(mensagem, "O valor de %s deve ser maior que zero!", campo);
+        exibirMensagemErro(mensagem);
+        return 0;
+    }
+    return 1;
+}
+
+void inicializarCarta(Carta *carta)
+{
+    carta->codigo[0] = '\0';
+    carta->estado[0] = '\0';
+    carta->cidade[0] = '\0';
+    carta->populacao = 0;
+    carta->area = 0.0f;
+    carta->pib = 0.0f;
+    carta->pontosTuristicos = 0;
 }
 
 void lerDadosCarta(Carta *carta)
 {
-    desenharCabecalho("Cadastro de Carta");
+    char buffer[100];
+    float valor;
 
+    // Ler código
     do
     {
-        printf("Digite o código (ex: A1): ");
-        scanf("%3s", carta->codigo);
-        if (!validarCodigo(carta->codigo))
-        {
-            exibirMensagemErro(
-                "Código inválido! Use uma letra seguida de um número.");
-        }
-    } while (!validarCodigo(carta->codigo));
-
-    do
-    {
-        printf("Digite o estado (ex: SP): ");
-        scanf("%2s", carta->estado);
-        if (!validarEstado(carta->estado))
-        {
-            exibirMensagemErro("Estado inválido! Use duas letras.");
-        }
-    } while (!validarEstado(carta->estado));
-
-    do
-    {
-        printf("Digite a cidade: ");
+        printf("Digite o código da carta (3 caracteres): ");
+        scanf("%s", buffer);
         getchar(); // Limpar o buffer
-        fgets(carta->cidade, sizeof(carta->cidade), stdin);
-        carta->cidade[strcspn(carta->cidade, "\n")] = 0;
-        if (!validarCidade(carta->cidade))
-        {
-            exibirMensagemErro("Nome de cidade inválido!");
-        }
-    } while (!validarCidade(carta->cidade));
+    } while (!validarCodigo(buffer));
+    strcpy(carta->codigo, buffer);
 
+    // Ler estado
+    do
+    {
+        printf("Digite a sigla do estado (2 letras maiúsculas): ");
+        scanf("%s", buffer);
+        getchar(); // Limpar o buffer
+    } while (!validarEstado(buffer));
+    strcpy(carta->estado, buffer);
+
+    // Ler cidade
+    do
+    {
+        printf("Digite o nome da cidade: ");
+        fgets(buffer, sizeof(buffer), stdin);
+        buffer[strcspn(buffer, "\n")] = 0; // Remover o \n
+    } while (!validarCidade(buffer));
+    strcpy(carta->cidade, buffer);
+
+    // Ler população
     do
     {
         printf("Digite a população: ");
         scanf("%d", &carta->populacao);
-        if (carta->populacao <= 0)
-        {
-            exibirMensagemErro("População deve ser maior que zero!");
-        }
-    } while (carta->populacao <= 0);
+        getchar(); // Limpar o buffer
+    } while (!validarValorNumerico("população", carta->populacao));
 
+    // Ler área
     do
     {
-        printf("Digite a área: ");
+        printf("Digite a área (km²): ");
         scanf("%f", &carta->area);
-        if (carta->area <= 0)
-        {
-            exibirMensagemErro("Área deve ser maior que zero!");
-        }
-    } while (carta->area <= 0);
+        getchar(); // Limpar o buffer
+    } while (!validarValorNumerico("área", carta->area));
 
+    // Ler PIB
     do
     {
-        printf("Digite o PIB: ");
+        printf("Digite o PIB (em milhões): ");
         scanf("%f", &carta->pib);
-        if (carta->pib < 0)
-        {
-            exibirMensagemErro("PIB não pode ser negativo!");
-        }
-    } while (carta->pib < 0);
+        getchar(); // Limpar o buffer
+    } while (!validarValorNumerico("PIB", carta->pib));
 
+    // Ler pontos turísticos
     do
     {
         printf("Digite o número de pontos turísticos: ");
         scanf("%d", &carta->pontosTuristicos);
-        if (carta->pontosTuristicos < 0)
-        {
-            exibirMensagemErro(
-                "Número de pontos turísticos não pode ser negativo!");
-        }
-    } while (carta->pontosTuristicos < 0);
+        getchar(); // Limpar o buffer
+    } while (
+        !validarValorNumerico("pontos turísticos", carta->pontosTuristicos));
 }
 
 void exibirCarta(const Carta *carta)
 {
-    desenharCabecalho("Dados da Carta");
+    desenharLinha();
     printf("Código: %s\n", carta->codigo);
-    printf("Estado: %s\n", carta->estado);
-    printf("Cidade: %s\n", carta->cidade);
-    printf("População: %d\n", carta->populacao);
-    printf("Área: %.2f\n", carta->area);
-    printf("PIB: %.2f\n", carta->pib);
+    printf("Cidade: %s (%s)\n", carta->cidade, carta->estado);
+    printf("População: %d habitantes\n", carta->populacao);
+    printf("Área: %.2f km²\n", carta->area);
+    printf("PIB: %.2f milhões\n", carta->pib);
     printf("Pontos Turísticos: %d\n", carta->pontosTuristicos);
     desenharLinha();
 }
 
 void calcularIndicadores(Carta *carta)
 {
-    // Para o nível beginner, vamos apenas exibir algumas classificações básicas
-    float densidadePopulacional = carta->populacao / carta->area;
-    float pibPerCapita = carta->pib / carta->populacao;
+    // Densidade populacional (hab/km²)
+    float densidade = carta->populacao / carta->area;
+
+    // PIB per capita
+    float pibPerCapita = (carta->pib * 1000000.0f) / carta->populacao;
 
     printf("\nIndicadores calculados:\n");
-    printf("Densidade Populacional: %.2f hab/km²\n", densidadePopulacional);
+    printf("Densidade populacional: %.2f hab/km²\n", densidade);
     printf("PIB per capita: R$ %.2f\n", pibPerCapita);
 }
 
-float calcularSuperPoder(Carta *carta)
+float calcularSuperPoder(const Carta *carta)
 {
-    // Para o nível beginner, vamos usar uma fórmula simples
-    float superPoder = (carta->populacao / 1000000.0f) + // População em milhões
-                       (carta->area / 1000.0f) +   // Área em milhares de km²
-                       (carta->pib / 1000000.0f) + // PIB em milhões
-                       (float)carta->pontosTuristicos; // Pontos turísticos
+    // Normalização dos valores
+    float popNorm = carta->populacao / 1000000.0f;  // Em milhões
+    float areaNorm = carta->area / 1000.0f;         // Em milhares de km²
+    float pibNorm = carta->pib / 1000.0f;           // Em bilhões
+    float ptNorm = carta->pontosTuristicos / 10.0f; // Em dezenas
 
-    return superPoder;
+    // Média ponderada
+    return (popNorm * 0.3f + areaNorm * 0.2f + pibNorm * 0.3f + ptNorm * 0.2f);
 }
 
-float obterValorAtributo(Carta *carta, int atributo)
+float obterValorAtributo(const Carta *carta, int atributo)
 {
     switch (atributo)
     {
@@ -158,12 +221,6 @@ float obterValorAtributo(Carta *carta, int atributo)
         return carta->pib;
     case 4:
         return (float)carta->pontosTuristicos;
-    case 5:
-        return carta->populacao / carta->area; // Densidade populacional
-    case 6:
-        return carta->pib / carta->populacao; // PIB per capita
-    case 7:
-        return calcularSuperPoder(carta);
     default:
         return 0.0f;
     }
@@ -181,12 +238,6 @@ const char *obterNomeAtributo(int atributo)
         return "PIB";
     case 4:
         return "Pontos Turísticos";
-    case 5:
-        return "Densidade Populacional";
-    case 6:
-        return "PIB per capita";
-    case 7:
-        return "Super Poder";
     default:
         return "Desconhecido";
     }
