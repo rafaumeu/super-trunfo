@@ -4,11 +4,12 @@
 
 void exibirMenu(void)
 {
-    desenharCabecalho("Super Trunfo - Menu Principal");
+    desenharCabecalho("Menu Principal");
     printf("1. Criar nova carta\n");
-    printf("2. Exibir carta\n");
+    printf("2. Exibir última carta\n");
     printf("3. Comparar cartas\n");
-    printf("4. Ajuda/Instruções\n");
+    printf("4. Executar testes\n");
+    printf("5. Ajuda/Instruções\n");
     printf("0. Sair\n");
     desenharLinha();
     printf("Escolha uma opção: ");

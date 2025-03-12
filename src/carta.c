@@ -1,36 +1,114 @@
 #include "../include/carta.h"
 #include "../include/interface.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
 void inicializarCarta(Carta *carta) { memset(carta, 0, sizeof(Carta)); }
 
+// Funções auxiliares de validação
+static int validarCodigo(const char *codigo)
+{
+    if (strlen(codigo) != 2)
+        return 0;
+    if (!isalpha(codigo[0]) || !isdigit(codigo[1]))
+        return 0;
+    return 1;
+}
+
+static int validarEstado(const char *estado)
+{
+    if (strlen(estado) != 2)
+        return 0;
+    if (!isalpha(estado[0]) || !isalpha(estado[1]))
+        return 0;
+    return 1;
+}
+
+static int validarCidade(const char *cidade)
+{
+    if (strlen(cidade) < 2 || strlen(cidade) >= 50)
+        return 0;
+    return 1;
+}
+
 void lerDadosCarta(Carta *carta)
 {
     desenharCabecalho("Cadastro de Carta");
 
-    printf("Digite o código (ex: A1): ");
-    scanf("%3s", carta->codigo);
+    do
+    {
+        printf("Digite o código (ex: A1): ");
+        scanf("%3s", carta->codigo);
+        if (!validarCodigo(carta->codigo))
+        {
+            exibirMensagemErro(
+                "Código inválido! Use uma letra seguida de um número.");
+        }
+    } while (!validarCodigo(carta->codigo));
 
-    printf("Digite o estado (ex: SP): ");
-    scanf("%2s", carta->estado);
+    do
+    {
+        printf("Digite o estado (ex: SP): ");
+        scanf("%2s", carta->estado);
+        if (!validarEstado(carta->estado))
+        {
+            exibirMensagemErro("Estado inválido! Use duas letras.");
+        }
+    } while (!validarEstado(carta->estado));
 
-    printf("Digite a cidade: ");
-    getchar(); // Limpar o buffer
-    fgets(carta->cidade, sizeof(carta->cidade), stdin);
-    carta->cidade[strcspn(carta->cidade, "\n")] = 0;
+    do
+    {
+        printf("Digite a cidade: ");
+        getchar(); // Limpar o buffer
+        fgets(carta->cidade, sizeof(carta->cidade), stdin);
+        carta->cidade[strcspn(carta->cidade, "\n")] = 0;
+        if (!validarCidade(carta->cidade))
+        {
+            exibirMensagemErro("Nome de cidade inválido!");
+        }
+    } while (!validarCidade(carta->cidade));
 
-    printf("Digite a população: ");
-    scanf("%d", &carta->populacao);
+    do
+    {
+        printf("Digite a população: ");
+        scanf("%d", &carta->populacao);
+        if (carta->populacao <= 0)
+        {
+            exibirMensagemErro("População deve ser maior que zero!");
+        }
+    } while (carta->populacao <= 0);
 
-    printf("Digite a área: ");
-    scanf("%f", &carta->area);
+    do
+    {
+        printf("Digite a área: ");
+        scanf("%f", &carta->area);
+        if (carta->area <= 0)
+        {
+            exibirMensagemErro("Área deve ser maior que zero!");
+        }
+    } while (carta->area <= 0);
 
-    printf("Digite o PIB: ");
-    scanf("%f", &carta->pib);
+    do
+    {
+        printf("Digite o PIB: ");
+        scanf("%f", &carta->pib);
+        if (carta->pib < 0)
+        {
+            exibirMensagemErro("PIB não pode ser negativo!");
+        }
+    } while (carta->pib < 0);
 
-    printf("Digite o número de pontos turísticos: ");
-    scanf("%d", &carta->pontosTuristicos);
+    do
+    {
+        printf("Digite o número de pontos turísticos: ");
+        scanf("%d", &carta->pontosTuristicos);
+        if (carta->pontosTuristicos < 0)
+        {
+            exibirMensagemErro(
+                "Número de pontos turísticos não pode ser negativo!");
+        }
+    } while (carta->pontosTuristicos < 0);
 }
 
 void exibirCarta(const Carta *carta)
