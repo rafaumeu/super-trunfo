@@ -1,8 +1,10 @@
 #include "../include/carta.h"
+#include "../include/constantes.h"
 #include "../include/interface.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/statvfs.h>
 
 // Constantes de validação
 #define TAMANHO_MAXIMO_CODIGO 3
@@ -54,6 +56,24 @@ static int validarEstado(const char *estado)
         }
     }
 
+    // Verifica se é uma UF válida
+    int ufValida = 0;
+    for (int i = 0; i < NUM_UFS; i++)
+    {
+        if (strcmp(estado, UFS_VALIDAS[i]) == 0)
+        {
+            ufValida = 1;
+            break;
+        }
+    }
+
+    if (!ufValida)
+    {
+        exibirMensagemErro(
+            "UF inválida! Use uma sigla válida de estado brasileiro.");
+        return 0;
+    }
+
     return 1;
 }
 
@@ -95,6 +115,54 @@ static int validarValorNumerico(const char *campo, float valor)
     return 1;
 }
 
+static int validarEspacoDisco(void)
+{
+#ifdef _WIN32
+    // Implementação para Windows usando GetDiskFreeSpaceEx
+    ULARGE_INTEGER espacoLivre;
+    if (!GetDiskFreeSpaceEx(NULL, &espacoLivre, NULL, NULL))
+    {
+        exibirMensagemErro("Erro ao verificar espaço em disco!");
+        return 0;
+    }
+    return espacoLivre.QuadPart >= ESPACO_MINIMO_DISCO;
+#else
+    // Implementação para sistemas Unix-like
+    struct statvfs stat;
+    if (statvfs(".", &stat) != 0)
+    {
+        exibirMensagemErro("Erro ao verificar espaço em disco!");
+        return 0;
+    }
+    unsigned long long espacoLivre = stat.f_bsize * stat.f_bavail;
+    if (espacoLivre < ESPACO_MINIMO_DISCO)
+    {
+        exibirMensagemErro("Espaço insuficiente em disco!");
+        return 0;
+    }
+    return 1;
+#endif
+}
+
+static int validarArquivo(const char *arquivo, const char *modo)
+{
+    FILE *fp = fopen(arquivo, modo);
+    if (fp == NULL)
+    {
+        if (strcmp(modo, "rb") == 0)
+        {
+            exibirMensagemErro("Arquivo não encontrado!");
+        }
+        else
+        {
+            exibirMensagemErro("Não foi possível acessar o arquivo!");
+        }
+        return 0;
+    }
+    fclose(fp);
+    return 1;
+}
+
 void inicializarCarta(Carta *carta)
 {
     carta->codigo[0] = '\0';
@@ -109,7 +177,12 @@ void inicializarCarta(Carta *carta)
 void lerDadosCarta(Carta *carta)
 {
     char buffer[100];
-    float valor;
+
+    // Verificar espaço em disco antes de começar
+    if (!validarEspacoDisco())
+    {
+        return;
+    }
 
     // Ler código
     do
