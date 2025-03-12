@@ -12,6 +12,7 @@ jobs:
       issues: write
       pull-requests: write
       repository-projects: write
+      projects: write
       contents: read
     steps:
       - uses: actions/add-to-project@v0.5.0
