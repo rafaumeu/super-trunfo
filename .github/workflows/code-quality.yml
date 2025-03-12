@@ -1,21 +1,87 @@
-name: Code Quality
+name: Qualidade de Código
 
 on:
   push:
-    branches: [main]
+    branches: ["main", "master", "adventurer", "beginner"]
   pull_request:
-    branches: [main]
+    branches: ["main", "master", "adventurer", "beginner"]
 
 jobs:
-  lint:
+  determine-level:
     runs-on: ubuntu-latest
+    outputs:
+      level: ${{ steps.set-level.outputs.level }}
     steps:
-      - uses: actions/checkout@v4
+      - id: set-level
+        run: |
+          if [[ "${{ github.base_ref }}" == "master" || "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "level=master" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.base_ref }}" == "adventurer" || "${{ github.ref }}" == "refs/heads/adventurer" ]]; then
+            echo "level=adventurer" >> $GITHUB_OUTPUT
+          else
+            echo "level=beginner" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Install clang-format
-        run: sudo apt-get install -y clang-format
+  quality:
+    needs: determine-level
+    runs-on: ubuntu-latest
+    env:
+      LEVEL: ${{ needs.determine-level.outputs.level }}
 
-      - name: Check formatting
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Instalar ferramentas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format clang-tidy cppcheck python3-pip
+          pip3 install cpplint
+          pip3 install lizard
+
+      - name: Verificar formatação
         run: |
           find . -name '*.c' -o -name '*.h' | xargs clang-format -i --style=file
           git diff --exit-code
+
+      - name: Análise complexidade
+        run: |
+          if [[ "$LEVEL" == "master" ]]; then
+            python3 -m lizard src/*.c -C 20
+          elif [[ "$LEVEL" == "adventurer" ]]; then
+            python3 -m lizard src/*.c -C 15
+          else
+            python3 -m lizard src/*.c -C 10
+          fi
+
+      - name: Lint
+        run: |
+          if [[ "$LEVEL" == "master" ]]; then
+            cpplint --filter=-legal/copyright --recursive src/ include/
+          elif [[ "$LEVEL" == "adventurer" ]]; then
+            cpplint --filter=-legal/copyright,-readability/casting --recursive src/
+          else
+            cpplint --filter=-legal/copyright,-readability/casting,-runtime/int --recursive src/
+          fi
+
+      - name: Análise estática avançada
+        if: env.LEVEL == 'master'
+        run: |
+          clang-tidy src/*.c \
+            -checks=*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm-*,-cppcoreguidelines-avoid-magic-numbers \
+            -- -I./include
+
+      - name: Verificar documentação
+        run: |
+          if [[ "$LEVEL" == "master" ]]; then
+            doxygen -g
+            doxygen Doxyfile
+            test -d html
+          fi
+
+      - name: Upload relatórios
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-reports
+          path: |
+            reports/
+            html/
