@@ -7,6 +7,11 @@ void testarComparacao(void);
 void testarSuperPoder(void);
 void testarPersistencia(void);
 void testarRanking(void);
-void executarTestes(void);
+
+/**
+ * @brief Executa todos os testes do sistema
+ * @return 0 se todos os testes passaram, diferente de 0 se algum falhou
+ */
+int executarTestes(void);
 
 #endif // TESTES_H

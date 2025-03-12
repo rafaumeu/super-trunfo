@@ -7,6 +7,13 @@
 #define INTERFACE_H
 
 #include "carta.h"
+#include "persistencia.h"
+#include "ranking.h"
+
+/**
+ * @brief Limpa a tela do terminal
+ */
+void limparTela(void);
 
 /**
  * @brief Exibe o menu principal do jogo
@@ -40,8 +47,12 @@ void mostrarCarta(Carta *carta, int numeroCarta);
  */
 void exibirResultado(int resultado, const char *atributo);
 
+/**
+ * @brief Exibe as instruções do jogo
+ */
+void exibirInstrucoes(void);
+
 // Funções de interface com usuário
-void limparTela(void);
 void pausar(void);
 void exibirMensagemErro(const char *mensagem);
 int lerOpcao(int min, int max);
@@ -49,5 +60,25 @@ int lerOpcao(int min, int max);
 // Funções de formatação
 void desenharLinha(void);
 void desenharCabecalho(const char *titulo);
+
+// Adicionar a declaração movida de carta.h
+void exibirCarta(const Carta *carta);
+
+/**
+ * @brief Exibe menu para alteração de idioma
+ */
+void alterarIdioma(void);
+
+void exibirMenuCriterios(void);
+CriterioRanking
+selecionarCriterioRanking(void); // Retorna o critério selecionado
+void criarCarta(void);
+void exibirUltimaCarta(void);
+void carregarUltimaCarta(void);
+
+// Função auxiliar para limpar o buffer de entrada
+static void limparBuffer(void);
+
+void aguardarEnter(void);
 
 #endif // INTERFACE_H

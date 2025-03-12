@@ -13,14 +13,17 @@
  */
 typedef enum
 {
-    RANKING_POPULACAO,
-    RANKING_AREA,
-    RANKING_PIB,
-    RANKING_PONTOS_TURISTICOS,
-    RANKING_DENSIDADE,
-    RANKING_PIB_PER_CAPITA,
-    RANKING_SUPER_PODER
+    CRITERIO_POPULACAO,
+    CRITERIO_AREA,
+    CRITERIO_PIB,
+    CRITERIO_PONTOS_TURISTICOS,
+    CRITERIO_DENSIDADE,
+    CRITERIO_PIB_PER_CAPITA,
+    CRITERIO_SUPER_PODER
 } CriterioRanking;
+
+#define NUM_CRITERIOS 7
+#define MAX_CARTAS 100
 
 /**
  * @brief Exibe o ranking das cartas por um critério específico
@@ -29,10 +32,15 @@ typedef enum
  */
 int exibirRanking(CriterioRanking criterio);
 
+void ordenarCartas(Carta *cartas, int numCartas, CriterioRanking criterio);
+float obterValorCriterio(const Carta *carta, CriterioRanking criterio);
+int carregarTodasCartas(Carta *cartas);
+
 /**
- * @brief Exibe o menu de seleção de critério para ranking
- * @return Critério selecionado
+ * @brief Obtém o nome do critério de ranking
+ * @param criterio Critério de ranking
+ * @return Nome do critério
  */
-CriterioRanking selecionarCriterioRanking(void);
+const char *obterNomeCriterio(CriterioRanking criterio);
 
 #endif // RANKING_H
