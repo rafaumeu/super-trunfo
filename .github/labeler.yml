@@ -22,3 +22,21 @@ build:
   - "**/Makefile"
   - "**/*.c"
   - "*.c"
+
+beginner:
+  - "src/**/*"
+  - "include/**/*"
+  - "tests/**/*"
+  - "Makefile"
+
+enhancement:
+  - "src/**/*.c"
+  - "include/**/*.h"
+
+i18n:
+  - "src/i18n.c"
+  - "include/i18n.h"
+
+bug-fix:
+  - "src/interface.c"
+  - "src/main.c"
